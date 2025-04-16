@@ -27,6 +27,9 @@ const hbs = exphbs.create({
         lt: (a, b) => a < b,
         add: (a, b) => a + b,
         multiply: (a, b) => a * b,
+        or: function() {
+            return Array.prototype.slice.call(arguments, 0, -1).some(Boolean);
+        },
         formatNumber: (number) => {
             return new Intl.NumberFormat('es-CO', {
                 minimumFractionDigits: 0,
@@ -89,6 +92,12 @@ const hbs = exphbs.create({
                 parseInt(p.accion_id) === parseInt(accion_id) && 
                 parseInt(p.estado) === 1
             );
+        },
+        hasAnyPermission: function(permisos, ...modulos) {
+            // Remover el último argumento que es el objeto de handlebars
+            modulos.pop();
+            if (!permisos || !Array.isArray(permisos)) return false;
+            return permisos.some(permiso => modulos.includes(permiso.modulo));
         }
     }
 });
