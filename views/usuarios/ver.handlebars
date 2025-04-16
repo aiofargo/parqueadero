@@ -1,0 +1,51 @@
+<div class="card">
+    <div class="card-header">
+        <h2>Detalles del Usuario</h2>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Nombres</label>
+                <input type="text" class="form-control" value="{{usuario.nombres}}" readonly>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Apellidos</label>
+                <input type="text" class="form-control" value="{{usuario.apellidos}}" readonly>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Documento de Identidad</label>
+                <input type="text" class="form-control" value="{{usuario.documento}}" readonly>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Correo Electrónico</label>
+                <input type="email" class="form-control" value="{{usuario.correo}}" readonly>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Celular</label>
+                <input type="tel" class="form-control" value="{{usuario.celular}}" readonly>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Rol</label>
+                <input type="text" class="form-control" value="{{usuario.rol_nombre}}" readonly>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Estado</label>
+                <input type="text" class="form-control" value="{{#if (eq usuario.estado 1)}}Habilitado{{else}}Inhabilitado{{/if}}" readonly>
+            </div>
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="/usuarios" class="btn btn-secondary me-md-2">Volver</a>
+            <a href="/usuarios/editar/{{usuario.id}}" class="btn btn-primary">Editar</a>
+        </div>
+    </div>
+</div> 

@@ -1,0 +1,81 @@
+<div class="card">
+    <div class="card-header">
+        <h2>Detalles del Tipo de Vehículo</h2>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Nombre</label>
+                <input type="text" class="form-control" value="{{tipo.nombre}}" readonly>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Descripción</label>
+                <textarea class="form-control" rows="3" readonly>{{tipo.descripcion}}</textarea>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Tarifa por Minuto</label>
+                <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="text" class="form-control" value="{{formatNumber tipo.tarifa_minuto}}" readonly>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Tarifa plena ($)</label>
+                <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="text" class="form-control" value="{{formatNumber tipo.tarifa_plena}}" readonly>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Tarifa 24 Horas ($)</label>
+                <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="text" class="form-control" value="{{formatNumber tipo.tarifa_24_horas}}" readonly>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Tarifa Mensual</label>
+                <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="text" class="form-control" value="{{formatNumber tipo.tarifa_mensual}}" readonly>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Porcentaje IVA</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" value="{{tipo.porcentaje_iva}}" readonly>
+                    <span class="input-group-text">%</span>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Estado</label>
+                <input type="text" class="form-control" value="{{#if (eq tipo.estado 1)}}Activo{{else}}Inactivo{{/if}}" readonly>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Fecha de Creación</label>
+                <input type="text" class="form-control" value="{{formatDate tipo.fecha_creacion}}" readonly>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Fecha de Actualización</label>
+                <input type="text" class="form-control" value="{{formatDate tipo.fecha_actualizacion}}" readonly>
+            </div>
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="/tipos-vehiculos" class="btn btn-secondary me-md-2">Volver</a>
+            <a href="/tipos-vehiculos/editar/{{tipo.id}}" class="btn btn-primary">Editar</a>
+        </div>
+    </div>
+</div> 

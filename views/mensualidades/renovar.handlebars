@@ -1,0 +1,195 @@
+<div class="card">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Renovar Mensualidad</h2>
+            <a href="/mensualidades" class="btn btn-secondary">Volver</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i>
+            Su mensualidad está paga hasta el <strong>{{fechaPagoActual}}</strong>.
+            {{#if (lt diasParaVencer 0)}}
+                <br>La mensualidad está vencida hace {{multiply diasParaVencer -1}} días.
+            {{else}}
+                <br>Faltan {{diasParaVencer}} días para el vencimiento.
+            {{/if}}
+        </div>
+
+        <form action="/mensualidades/renovar/{{mensualidad.id}}/pagar" method="POST">
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <h4>Detalles del Vehículo</h4>
+                    <div class="mb-3">
+                        <label class="form-label">Placa</label>
+                        <input type="text" class="form-control" value="{{mensualidad.placa}}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tipo de Vehículo</label>
+                        <input type="text" class="form-control" value="{{mensualidad.tipo_vehiculo}}" readonly>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h4>Detalles del Propietario</h4>
+                    <div class="mb-3">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control" value="{{mensualidad.nombre_dueno}}" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Celular</label>
+                        <input type="text" class="form-control" value="{{mensualidad.celular}}" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h4>Detalles del Pago</h4>
+                    <div class="mb-3">
+                        <label for="cantidad_meses" class="form-label">Cantidad de Meses a Pagar</label>
+                        <select class="form-select" id="cantidad_meses" name="cantidad_meses" required>
+                            <option value="1">1 mes - Hasta {{proximoVencimiento}}</option>
+                            <option value="2">2 meses</option>
+                            <option value="3">3 meses</option>
+                            <option value="6">6 meses</option>
+                            <option value="12">12 meses</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Valor Mensual sin IVA</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" value="{{formatNumber valorSinIvaMes}}" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">IVA Mensual</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" value="{{formatNumber valorIvaMes}}" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Total Mensual</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="text" class="form-control" value="{{formatNumber valorTotalMes}}" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Total sin IVA a Pagar</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="text" id="total_sin_iva" class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">IVA Total</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="text" id="total_iva" class="form-control" readonly>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Total a Pagar</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="text" id="total_pagar" class="form-control" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <label for="metodo_pago" class="form-label">Método de Pago</label>
+                    <select class="form-select" id="metodo_pago" name="metodo_pago" required>
+                        <option value="">Seleccione un método de pago</option>
+                        <option value="efectivo">Efectivo</option>
+                        <option value="tarjeta">Tarjeta de Crédito/Débito</option>
+                        <option value="transferencia">Transferencia Bancaria</option>
+                    </select>
+                </div>
+                <div class="col-md-6" id="referencia_container">
+                    <label for="referencia_pago" class="form-label">Referencia de Pago</label>
+                    <input type="text" class="form-control" id="referencia_pago" name="referencia_pago"
+                           placeholder="Número de recibo, últimos 4 dígitos de tarjeta, etc.">
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="/mensualidades" class="btn btn-secondary me-2">
+                    <i class="bi bi-x-circle me-1"></i>
+                    Cancelar
+                </a>
+                <button type="submit" class="btn btn-primary" formaction="/mensualidades/renovar/{{mensualidad.id}}/previsualizar">
+                    <i class="bi bi-eye me-1"></i>
+                    Previsualizar Ticket
+                </button>
+            </div>
+        </form>
+
+        <script>
+            document.getElementById('cantidad_meses').addEventListener('change', function() {
+                const meses = parseInt(this.value);
+                const valorSinIvaMes = {{valorSinIvaMes}};
+                const valorIvaMes = {{valorIvaMes}};
+                const valorTotalMes = {{valorTotalMes}};
+
+                const totalSinIva = valorSinIvaMes * meses;
+                const totalIva = valorIvaMes * meses;
+                const totalPagar = valorTotalMes * meses;
+
+                document.getElementById('total_sin_iva').value = new Intl.NumberFormat('es-CO', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }).format(totalSinIva);
+
+                document.getElementById('total_iva').value = new Intl.NumberFormat('es-CO', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }).format(totalIva);
+
+                document.getElementById('total_pagar').value = new Intl.NumberFormat('es-CO', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }).format(totalPagar);
+
+                // Actualizar la opción seleccionada con la fecha de vencimiento
+                const fechaBase = new Date('{{mensualidad.vigente_hasta}}');
+                fechaBase.setMonth(fechaBase.getMonth() + meses);
+                const nuevaFecha = fechaBase.toLocaleDateString('es-CO', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                this.options[0].text = `${meses} ${meses === 1 ? 'mes' : 'meses'} - Hasta ${nuevaFecha}`;
+            });
+
+            // Inicializar los totales
+            document.getElementById('cantidad_meses').dispatchEvent(new Event('change'));
+
+            // Manejar la visibilidad y requerimiento del campo de referencia
+            document.getElementById('metodo_pago').addEventListener('change', function() {
+                const referenciaContainer = document.getElementById('referencia_container');
+                const referenciaInput = document.getElementById('referencia_pago');
+                
+                if (this.value === 'efectivo') {
+                    referenciaContainer.style.display = 'none';
+                    referenciaInput.removeAttribute('required');
+                    referenciaInput.value = '';
+                } else {
+                    referenciaContainer.style.display = 'block';
+                    referenciaInput.setAttribute('required', 'required');
+                    referenciaInput.placeholder = this.value === 'tarjeta' ? 
+                        'Últimos 4 dígitos de la tarjeta' : 
+                        'Número de referencia de la transferencia';
+                }
+            });
+        </script>
+    </div>
+</div> 

@@ -1,0 +1,51 @@
+<div class="card">
+    <div class="card-header">
+        <h2>Editar Tipo de Vehículo</h2>
+    </div>
+    <div class="card-body">
+        <form action="/tipos-vehiculos/editar/{{tipo.id}}" method="POST">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" class="form-control" id="nombre" name="nombre" value="{{tipo.nombre}}" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="descripcion" class="form-label">Descripción</label>
+                    <textarea class="form-control" id="descripcion" name="descripcion" rows="3">{{tipo.descripcion}}</textarea>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="tarifa_hora" class="form-label">Tarifa por Hora</label>
+                    <div class="input-group">
+                        <span class="input-group-text">$</span>
+                        <input type="number" class="form-control" id="tarifa_hora" name="tarifa_hora" min="0" step="100" value="{{tipo.tarifa_hora}}" required>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="porcentaje_iva" class="form-label">Porcentaje IVA</label>
+                    <div class="input-group">
+                        <input type="number" class="form-control" id="porcentaje_iva" name="porcentaje_iva" min="0" max="100" step="0.01" value="{{tipo.porcentaje_iva}}" required>
+                        <span class="input-group-text">%</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="estado" class="form-label">Estado</label>
+                    <select class="form-select" id="estado" name="estado" required>
+                        <option value="1" {{#if (eq tipo.estado 1)}}selected{{/if}}>Activo</option>
+                        <option value="0" {{#if (eq tipo.estado 0)}}selected{{/if}}>Inactivo</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="/tipos-vehiculos" class="btn btn-secondary me-md-2">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            </div>
+        </form>
+    </div>
+</div> 

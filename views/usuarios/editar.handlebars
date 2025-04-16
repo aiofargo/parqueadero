@@ -1,0 +1,87 @@
+<div class="card">
+    <div class="card-header">
+        <h2>Editar Usuario</h2>
+    </div>
+    <div class="card-body">
+        <form action="/usuarios/editar/{{usuario.id}}" method="POST">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="nombres" class="form-label">Nombres</label>
+                    <input type="text" class="form-control" id="nombres" name="nombres" value="{{usuario.nombres}}" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="apellidos" class="form-label">Apellidos</label>
+                    <input type="text" class="form-control" id="apellidos" name="apellidos" value="{{usuario.apellidos}}" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="documento" class="form-label">Documento de Identidad</label>
+                    <input type="text" class="form-control" id="documento" name="documento" value="{{usuario.documento}}" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="correo" class="form-label">Correo Electrónico</label>
+                    <input type="email" class="form-control" id="correo" name="correo" value="{{usuario.correo}}" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="celular" class="form-label">Celular</label>
+                    <input type="tel" class="form-control" id="celular" name="celular" value="{{usuario.celular}}" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="rol_id" class="form-label">Rol</label>
+                    <select class="form-select" id="rol_id" name="rol_id" required>
+                        <option value="">Seleccione un rol</option>
+                        {{#each roles}}
+                        <option value="{{this.id}}" {{#if (eq ../usuario.rol_id this.id)}}selected{{/if}}>{{this.nombre}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <div class="input-group">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Dejar vacío para mantener la contraseña actual">
+                        <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                            <i class="bi bi-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="estado" class="form-label">Estado</label>
+                    <select class="form-select" id="estado" name="estado" required>
+                        <option value="1" {{#if (eq usuario.estado 1)}}selected{{/if}}>Habilitado</option>
+                        <option value="0" {{#if (eq usuario.estado 0)}}selected{{/if}}>Inhabilitado</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="/usuarios" class="btn btn-secondary me-md-2">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById('togglePassword').addEventListener('click', function() {
+        const passwordInput = document.getElementById('password');
+        const icon = this.querySelector('i');
+        
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            icon.classList.remove('bi-eye');
+            icon.classList.add('bi-eye-slash');
+        } else {
+            passwordInput.type = 'password';
+            icon.classList.remove('bi-eye-slash');
+            icon.classList.add('bi-eye');
+        }
+    });
+</script> 

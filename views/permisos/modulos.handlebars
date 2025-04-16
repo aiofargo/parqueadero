@@ -1,0 +1,33 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Módulos del Sistema</h2>
+    <a href="/permisos/modulos/crear" class="btn btn-primary">Nuevo Módulo</a>
+</div>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Icono</th>
+                <th>Ruta</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each modulos}}
+            <tr>
+                <td>{{this.nombre}}</td>
+                <td>{{this.descripcion}}</td>
+                <td><i class="{{this.icono}}"></i> {{this.icono}}</td>
+                <td>{{this.ruta}}</td>
+                <td>{{#if (eq this.estado 1)}}Activo{{else}}Inactivo{{/if}}</td>
+                <td>
+                    <a href="/permisos/modulos/editar/{{this.id}}" class="btn btn-sm btn-warning">Editar</a>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div> 

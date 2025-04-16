@@ -1,0 +1,95 @@
+<div class="container mt-4">
+    <h2 class="mb-4">Estadísticas del Parqueadero</h2>
+
+    <div class="row">
+        <!-- Vehículos Actualmente en el Parqueadero -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="card-title mb-0">Vehículos Actualmente en el Parqueadero</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Tipo de Vehículo</th>
+                                    <th class="text-end">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each vehiculosActivos}}
+                                <tr>
+                                    <td>{{tipo_vehiculo}}</td>
+                                    <td class="text-end">{{total}}</td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ingresos del Día -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="card-title mb-0">Ingresos del Día</h5>
+                </div>
+                <div class="card-body">
+                    <h3 class="text-center">${{formatNumber ingresosDiarios.total_dia}}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Estadísticas por Tipo de Vehículo -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="card-title mb-0">Estadísticas por Tipo de Vehículo (Hoy)</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Tipo de Vehículo</th>
+                                    <th class="text-end">Total Entradas</th>
+                                    <th class="text-end">Total Ingresos</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{#each estadisticasPorTipo}}
+                                <tr>
+                                    <td>{{tipo_vehiculo}}</td>
+                                    <td class="text-end">{{total_entradas}}</td>
+                                    <td class="text-end">${{formatNumber total_ingresos}}</td>
+                                </tr>
+                                {{/each}}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botón para actualizar -->
+    <div class="row mt-4">
+        <div class="col-12 text-center">
+            <button class="btn btn-primary" onclick="location.reload()">
+                <i class="fas fa-sync-alt"></i> Actualizar Estadísticas
+            </button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Actualizar automáticamente cada 5 minutos
+    setInterval(() => {
+        location.reload();
+    }, 300000);
+</script> 

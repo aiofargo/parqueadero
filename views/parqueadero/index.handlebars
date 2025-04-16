@@ -1,0 +1,251 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="text-center mb-0">
+                        <i class="bi bi-p-square-fill me-2"></i>
+                        Control de Parqueadero
+                    </h3>
+                </div>
+                <div class="card-body">
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <a href="/parqueadero/entrada" class="btn btn-success btn-lg w-100 py-4">
+                                <i class="bi bi-box-arrow-in-right fs-1 d-block mb-2"></i>
+                                Registrar Entrada
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <a href="/parqueadero/salida" class="btn btn-danger btn-lg w-100 py-4">
+                                <i class="bi bi-box-arrow-left fs-1 d-block mb-2"></i>
+                                Registrar Salida
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-8 mx-auto">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h4 class="mb-0">
+                            <i class="bi bi-graph-up me-2"></i>
+                            Estadísticas
+                        </h4>
+                        <button class="btn btn-light btn-sm" onclick="actualizarEstadisticas()">
+                            <i class="bi bi-arrow-clockwise"></i> Actualizar
+                        </button>
+                    </div>
+                    <div class="row g-2">
+                        <div class="col-md-4">
+                            <input type="date" id="fechaEstadisticas" class="form-control form-control-sm" 
+                                   value="{{formatDateInput currentDate}}" max="{{formatDateInput currentDate}}">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="time" id="horaInicio" class="form-control form-control-sm" value="00:00">
+                        </div>
+                        <div class="col-md-4">
+                            <input type="time" id="horaFin" class="form-control form-control-sm" value="23:59">
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-0">
+                    <div class="row g-0">
+                        <!-- Vehículos en Patio -->
+                        <div class="col-md-6 border-end">
+                            <div class="p-3">
+                                <h5 class="border-bottom pb-2 mb-3">
+                                    <i class="bi bi-car-front me-2"></i>
+                                    Vehículos en Patio
+                                </h5>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>Total:</span>
+                                            <span id="totalActivos" class="badge bg-primary">0</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mt-2">
+                                            <span>Por Tiempo:</span>
+                                            <span id="activosTiempo" class="badge bg-warning">0</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mt-2">
+                                            <span>Mensuales:</span>
+                                            <span id="activosMensual" class="badge bg-success">0</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mt-2">
+                                            <span>Exentos:</span>
+                                            <span id="activosExento" class="badge bg-info">0</span>
+                                        </div>
+                                        <hr>
+                                        <h6 class="mt-3">Por Categoría:</h6>
+                                        <div id="vehiculosPorTipo" class="mt-2">
+                                            <!-- Se llenará dinámicamente -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Movimientos del Día -->
+                        <div class="col-md-6">
+                            <div class="p-3">
+                                <h5 class="border-bottom pb-2 mb-3">
+                                    <i class="bi bi-arrow-left-right me-2"></i>
+                                    Movimientos del Día
+                                </h5>
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <span>Entradas Totales:</span>
+                                            <span id="totalEntradas" class="badge bg-success">0</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mt-2">
+                                            <span class="small">- Por Tiempo:</span>
+                                            <span id="entradasTiempo" class="badge bg-warning">0</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mt-2">
+                                            <span class="small">- Mensuales:</span>
+                                            <span id="entradasMensual" class="badge bg-success">0</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mt-2">
+                                            <span class="small">- Exentos:</span>
+                                            <span id="entradasExento" class="badge bg-info">0</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mt-2">
+                                            <span>Salidas:</span>
+                                            <span id="totalSalidas" class="badge bg-danger">0</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mt-2">
+                                            <span>Ingresos:</span>
+                                            <span id="totalIngresos" class="badge bg-primary">$0</span>
+                                        </div>
+                                        <hr>
+                                        <h6 class="mt-3">Por Categoría:</h6>
+                                        <div id="movimientosPorTipo" class="table-responsive mt-2">
+                                            <table class="table table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Tipo</th>
+                                                        <th class="text-end">Ent.</th>
+                                                        <th class="text-end">Sal.</th>
+                                                        <th class="text-end">Ing.</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <!-- Se llenará dinámicamente -->
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function actualizarEstadisticas() {
+    const fecha = document.getElementById('fechaEstadisticas').value;
+    const horaInicio = document.getElementById('horaInicio').value;
+    const horaFin = document.getElementById('horaFin').value;
+
+    // Construir la URL con los parámetros
+    const url = new URL('/parqueadero/estadisticas', window.location.origin);
+    url.searchParams.append('fecha', fecha);
+    url.searchParams.append('horaInicio', horaInicio);
+    url.searchParams.append('horaFin', horaFin);
+
+    fetch(url)
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                console.error('Error:', data.mensaje);
+                return;
+            }
+
+            // Actualizar vehículos en patio
+            document.getElementById('totalActivos').textContent = data.activos.total;
+            document.getElementById('activosTiempo').textContent = data.activos.tiempo;
+            document.getElementById('activosMensual').textContent = data.activos.mensual;
+            document.getElementById('activosExento').textContent = data.activos.exento;
+
+            // Actualizar vehículos por tipo en patio
+            const vehiculosPorTipoContainer = document.getElementById('vehiculosPorTipo');
+            vehiculosPorTipoContainer.innerHTML = '';
+            data.vehiculosPorTipo.forEach(tipo => {
+                if (tipo.cantidad > 0) {
+                    const div = document.createElement('div');
+                    div.className = 'd-flex justify-content-between align-items-center mt-1';
+                    div.innerHTML = `
+                        <span class="small">- ${tipo.nombre}:</span>
+                        <span class="badge bg-secondary">${tipo.cantidad}</span>
+                    `;
+                    vehiculosPorTipoContainer.appendChild(div);
+                }
+            });
+
+            // Actualizar movimientos del día
+            document.getElementById('totalEntradas').textContent = data.movimientos.entradas.total;
+            document.getElementById('entradasTiempo').textContent = data.movimientos.entradas.tiempo;
+            document.getElementById('entradasMensual').textContent = data.movimientos.entradas.mensual;
+            document.getElementById('entradasExento').textContent = data.movimientos.entradas.exento;
+            document.getElementById('totalSalidas').textContent = data.movimientos.salidas;
+            document.getElementById('totalIngresos').textContent = 
+                new Intl.NumberFormat('es-CO', { 
+                    style: 'currency', 
+                    currency: 'COP',
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0
+                }).format(data.movimientos.ingresos);
+
+            // Actualizar movimientos por tipo
+            const movimientosPorTipoBody = document.querySelector('#movimientosPorTipo tbody');
+            movimientosPorTipoBody.innerHTML = '';
+            data.movimientosPorTipo.forEach(tipo => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td class="small">${tipo.nombre}</td>
+                    <td class="text-end">${tipo.total_entradas}</td>
+                    <td class="text-end">${tipo.total_salidas}</td>
+                    <td class="text-end">${new Intl.NumberFormat('es-CO', {
+                        style: 'currency',
+                        currency: 'COP',
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0
+                    }).format(tipo.total_ingresos)}</td>
+                `;
+                movimientosPorTipoBody.appendChild(tr);
+            });
+        })
+        .catch(error => console.error('Error al obtener estadísticas:', error));
+}
+
+// Agregar event listeners para los inputs
+document.getElementById('fechaEstadisticas').addEventListener('change', actualizarEstadisticas);
+document.getElementById('horaInicio').addEventListener('change', actualizarEstadisticas);
+document.getElementById('horaFin').addEventListener('change', actualizarEstadisticas);
+
+// Inicializar con la fecha actual
+document.addEventListener('DOMContentLoaded', () => {
+    const today = new Date();
+    document.getElementById('fechaEstadisticas').value = today.toISOString().split('T')[0];
+    actualizarEstadisticas();
+});
+
+// Actualizar cada 30 segundos solo si estamos viendo el día actual
+setInterval(() => {
+    const fechaSeleccionada = document.getElementById('fechaEstadisticas').value;
+    const today = new Date().toISOString().split('T')[0];
+    if (fechaSeleccionada === today) {
+        actualizarEstadisticas();
+    }
+}, 30000);
+</script> 

@@ -1,0 +1,113 @@
+<div class="card">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Mensualidades</h2>
+            <a href="/mensualidades/crear" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i>
+                Nueva Mensualidad
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <!-- Filtro de búsqueda -->
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="input-group">
+                    <input type="text" id="filtroPlaca" class="form-control" placeholder="Buscar por placa..." value="{{filtroPlaca}}">
+                    <button class="btn btn-outline-secondary" type="button" id="btnFiltrar">
+                        <i class="bi bi-search"></i>
+                    </button>
+                    {{#if filtroPlaca}}
+                    <button class="btn btn-outline-secondary" type="button" id="btnLimpiar">
+                        <i class="bi bi-x-circle"></i>
+                    </button>
+                    {{/if}}
+                </div>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Placa</th>
+                        <th>Nombre Dueño</th>
+                        <th>Tipo Vehículo</th>
+                        <th>Fecha Pago</th>
+                        <th>Vigente Desde</th>
+                        <th>Vigente Hasta</th>
+                        <th>Valor Total</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each mensualidades}}
+                    <tr>
+                        <td>{{placa}}</td>
+                        <td>{{nombre_dueno}}</td>
+                        <td>{{tipo_vehiculo}}</td>
+                        <td>{{formatDate fecha_pago}}</td>
+                        <td>{{formatDate vigente_desde}}</td>
+                        <td>{{formatDate vigente_hasta}}</td>
+                        <td>${{formatNumber valor_total}}</td>
+                        <td>
+                            <span class="badge {{#if (eq estado 1)}}bg-success{{else}}bg-danger{{/if}}">
+                                {{#if (eq estado 1)}}Activo{{else}}Inactivo{{/if}}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="/mensualidades/ver/{{id}}" class="btn btn-sm btn-info" title="Ver detalles">
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                {{#if pago_id}}
+                                    <a href="/mensualidades/ticket/{{pago_id}}" class="btn btn-sm btn-warning" title="Ver/Imprimir Ticket">
+                                        <i class="bi bi-receipt"></i>
+                                    </a>
+                                {{/if}}
+                                <a href="/mensualidades/renovar/{{id}}" class="btn btn-sm btn-success {{#if (eq estado 0)}}disabled{{/if}}" title="Renovar">
+                                    <i class="bi bi-arrow-clockwise"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const filtroPlaca = document.getElementById('filtroPlaca');
+    const btnFiltrar = document.getElementById('btnFiltrar');
+    const btnLimpiar = document.getElementById('btnLimpiar');
+
+    // Función para aplicar el filtro
+    function aplicarFiltro() {
+        const placa = filtroPlaca.value.trim();
+        if (placa) {
+            window.location.href = `/mensualidades?placa=${encodeURIComponent(placa)}`;
+        }
+    }
+
+    // Evento para el botón de filtrar
+    btnFiltrar.addEventListener('click', aplicarFiltro);
+
+    // Evento para la tecla Enter en el campo de búsqueda
+    filtroPlaca.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            aplicarFiltro();
+        }
+    });
+
+    // Evento para el botón de limpiar
+    if (btnLimpiar) {
+        btnLimpiar.addEventListener('click', function() {
+            window.location.href = '/mensualidades';
+        });
+    }
+});
+</script> 

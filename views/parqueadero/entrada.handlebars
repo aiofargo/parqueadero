@@ -1,0 +1,240 @@
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h3 class="text-center mb-0">
+                        <i class="bi bi-box-arrow-in-right me-2"></i>
+                        Registro de Entrada
+                    </h3>
+                </div>
+                <div class="card-body">
+                    {{#if error}}
+                    <div class="alert alert-danger" role="alert">
+                        {{error}}
+                    </div>
+                    {{/if}}
+                    
+                    <form action="/parqueadero/entrada" method="POST" id="entradaForm" onsubmit="return validarFormulario()">
+                        <div class="mb-4">
+                            <label for="placa" class="form-label">Placa del Vehículo</label>
+                            <div class="input-group input-group-lg">
+                                <input type="text" class="form-control text-uppercase" 
+                                       id="placa" name="placa" required 
+                                       placeholder="Ingrese la placa" 
+                                       maxlength="7">
+                                <button class="btn btn-outline-primary" type="button" id="verificarPlaca">
+                                    <i class="bi bi-search me-1"></i>
+                                    Verificar
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="infoVehiculo" class="mb-4 d-none">
+                            <div class="alert alert-info">
+                                <h5 class="alert-heading" id="tipoCobroTexto"></h5>
+                                <p class="mb-0" id="infoAdicional"></p>
+                            </div>
+                        </div>
+
+                        <div id="selectorTipoVehiculo" class="mb-4 d-none">
+                            <label class="form-label d-block">Tipo de Vehículo</label>
+                            <div class="row g-3">
+                                {{#each tiposVehiculos}}
+                                <div class="col-md-4">
+                                    <input type="radio" class="btn-check tipo-vehiculo-radio" name="tipo_vehiculo_id" 
+                                           id="tipo_{{id}}" value="{{id}}">
+                                    <label class="btn btn-outline-primary w-100 h-100 py-4" for="tipo_{{id}}">
+                                        <div class="text-center">
+                                            {{#if icono}}
+                                            <img src="/uploads/icons/{{icono}}" class="mb-2 d-block mx-auto" style="width: 48px; height: 48px; object-fit: contain;">
+                                            {{else}}
+                                                {{#if (eq nombre "Categoría 1")}}
+                                                <i class="bi bi-car-front fs-1 mb-2 d-block"></i>
+                                                {{else if (eq nombre "Categoría 2")}}
+                                                <i class="bi bi-bus-front fs-1 mb-2 d-block"></i>
+                                                {{else if (eq nombre "Categoría 3")}}
+                                                <i class="bi bi-truck fs-1 mb-2 d-block"></i>
+                                                {{else if (eq nombre "Categoría 4")}}
+                                                <i class="bi bi-truck fs-1 mb-2 d-block"></i>
+                                                {{else if (eq nombre "Categoría 5")}}
+                                                <i class="bi bi-bicycle fs-1 mb-2 d-block"></i>
+                                                {{else if (eq nombre "Categoría 6")}}
+                                                <i class="bi bi-bicycle fs-1 mb-2 d-block"></i>
+                                                {{else}}
+                                                <i class="bi bi-car-front fs-1 mb-2 d-block"></i>
+                                                {{/if}}
+                                            {{/if}}
+                                            <strong class="d-block">{{nombre}}</strong>
+                                            <small class="text-muted d-block">{{descripcion}}</small>
+                                        </div>
+                                    </label>
+                                </div>
+                                {{/each}}
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="observaciones_entrada" class="form-label">Observaciones de Entrada</label>
+                            <textarea class="form-control" id="observaciones_entrada" name="observaciones_entrada" 
+                                    rows="3" placeholder="Registre aquí cualquier novedad, daño o estado del vehículo al ingreso"></textarea>
+                            <div class="form-text">Si observa algún daño o condición especial del vehículo, regístrelo aquí.</div>
+                        </div>
+
+                        <input type="hidden" id="tipo_vehiculo_id_hidden" name="tipo_vehiculo_id">
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg d-none" id="btnRegistrarEntrada">
+                                <i class="bi bi-check-circle me-2"></i>
+                                Registrar Entrada
+                            </button>
+                            <a href="/parqueadero" class="btn btn-secondary btn-lg">
+                                <i class="bi bi-arrow-left me-2"></i>
+                                Volver
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.btn-check:checked + .btn-outline-primary {
+    border-width: 2px;
+    transform: scale(1.02);
+    box-shadow: 0 0 15px rgba(0,0,0,0.1);
+}
+
+.btn-outline-primary:hover {
+    transform: translateY(-2px);
+    transition: transform 0.2s;
+}
+
+.btn-outline-primary {
+    transition: all 0.3s;
+}
+</style>
+
+<script>
+let requiereTipoVehiculo = false;
+const btnRegistrarEntrada = document.getElementById('btnRegistrarEntrada');
+
+document.getElementById('placa').addEventListener('input', function(e) {
+    this.value = this.value.toUpperCase();
+    // Ocultar el botón cuando se modifica la placa
+    btnRegistrarEntrada.classList.add('d-none');
+});
+
+// Manejar cambios en los radio buttons
+document.querySelectorAll('.tipo-vehiculo-radio').forEach(radio => {
+    radio.addEventListener('change', function() {
+        if (this.checked) {
+            document.getElementById('tipo_vehiculo_id_hidden').value = this.value;
+            // Mostrar el botón cuando se selecciona un tipo de vehículo (solo si es requerido)
+            if (requiereTipoVehiculo) {
+                btnRegistrarEntrada.classList.remove('d-none');
+            }
+        }
+    });
+});
+
+function validarFormulario() {
+    const placa = document.getElementById('placa').value;
+    if (!placa) {
+        alert('Por favor, ingrese una placa');
+        return false;
+    }
+
+    const tipoVehiculoHidden = document.getElementById('tipo_vehiculo_id_hidden').value;
+    
+    if (requiereTipoVehiculo && !tipoVehiculoHidden) {
+        alert('Por favor, seleccione un tipo de vehículo');
+        return false;
+    }
+
+    return true;
+}
+
+document.getElementById('verificarPlaca').addEventListener('click', async function() {
+    const placa = document.getElementById('placa').value;
+    if (!placa) {
+        alert('Por favor, ingrese una placa');
+        return;
+    }
+
+    try {
+        const response = await fetch(`/parqueadero/verificar-placa?placa=${placa}`);
+        const data = await response.json();
+
+        const infoVehiculo = document.getElementById('infoVehiculo');
+        const selectorTipoVehiculo = document.getElementById('selectorTipoVehiculo');
+        const tipoCobroTexto = document.getElementById('tipoCobroTexto');
+        const infoAdicional = document.getElementById('infoAdicional');
+        const hiddenTipoVehiculo = document.getElementById('tipo_vehiculo_id_hidden');
+
+        infoVehiculo.classList.remove('d-none');
+        infoVehiculo.querySelector('.alert').className = 'alert';
+
+        // Ocultar el botón por defecto
+        btnRegistrarEntrada.classList.add('d-none');
+
+        if (data.error) {
+            // Si hay error (por ejemplo, vehículo ya dentro)
+            infoVehiculo.querySelector('.alert').classList.add('alert-danger');
+            tipoCobroTexto.textContent = data.mensaje;
+            infoAdicional.textContent = data.fechaEntrada ? `Entrada registrada: ${data.fechaEntrada}` : '';
+            selectorTipoVehiculo.classList.add('d-none');
+            hiddenTipoVehiculo.value = '';
+            requiereTipoVehiculo = false;
+            return;
+        }
+
+        requiereTipoVehiculo = data.requiereTipoVehiculo;
+        
+        if (data.requiereTipoVehiculo) {
+            infoVehiculo.querySelector('.alert').classList.add('alert-warning');
+            tipoCobroTexto.textContent = 'Cobro por Tiempo';
+            infoAdicional.textContent = 'Por favor, seleccione el tipo de vehículo';
+            selectorTipoVehiculo.classList.remove('d-none');
+            hiddenTipoVehiculo.value = '';
+            // El botón se mostrará cuando se seleccione un tipo de vehículo
+        } else {
+            selectorTipoVehiculo.classList.add('d-none');
+            hiddenTipoVehiculo.value = data.tipoVehiculoId;
+            
+            if (data.tipo === 'MENSUAL') {
+                infoVehiculo.querySelector('.alert').classList.add('alert-success');
+                tipoCobroTexto.textContent = 'Vehículo con Mensualidad';
+                const fechaVencimiento = new Date(data.vencimiento).toLocaleDateString('es-CO', {
+                    day: 'numeric',
+                    month: 'long',
+                    year: 'numeric'
+                });
+                infoAdicional.textContent = `Tipo: ${data.tipoVehiculo} - Vence: ${fechaVencimiento}`;
+                // Mostrar el botón para vehículos con mensualidad
+                btnRegistrarEntrada.classList.remove('d-none');
+            } else if (data.tipo === 'EXENTO') {
+                infoVehiculo.querySelector('.alert').classList.add('alert-info');
+                tipoCobroTexto.textContent = 'Vehículo Exento';
+                infoAdicional.textContent = `Tipo: ${data.tipoVehiculo}`;
+                // Mostrar el botón para vehículos exentos
+                btnRegistrarEntrada.classList.remove('d-none');
+            }
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        const infoVehiculo = document.getElementById('infoVehiculo');
+        const tipoCobroTexto = document.getElementById('tipoCobroTexto');
+        const infoAdicional = document.getElementById('infoAdicional');
+        
+        infoVehiculo.classList.remove('d-none');
+        infoVehiculo.querySelector('.alert').className = 'alert alert-danger';
+        tipoCobroTexto.textContent = 'Error';
+        infoAdicional.textContent = 'Error al verificar la placa. Por favor, intente nuevamente.';
+        // Ocultar el botón en caso de error
+        btnRegistrarEntrada.classList.add('d-none');
+    }
+});
+</script> 

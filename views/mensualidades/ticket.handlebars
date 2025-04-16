@@ -1,0 +1,483 @@
+<div class="ticket-container">
+    <div class="ticket-header">
+        <div class="empresa-info">
+            <p class="text-center empresa-titulo">Junta de acción comunal Ingles</p>
+            <p class="text-center">Nit: 860 038 190 - 6</p>
+            <p class="text-center">Direccion: Diagonal 41 A SUR # 26-86</p>
+            <p class="text-center">vigilados por superintendencia de industria y comercio</p>
+            <p class="text-center">Matricula N° 03685293</p>
+            <p class="text-center">super intendencia de vigilancia y seguridad privada y UAECOB</p>
+            <p class="text-center">seguro de responsabilidad civil N° 23424323425</p>
+        </div>
+        <h2>MENSUALIDAD - {{#if mensualidad.es_nueva}}Nueva{{else}}Renovación{{/if}}</h2>
+    </div>
+
+    <div class="ticket-body">
+        <div class="ticket-info">
+            <p class="text-center placa"><strong>PLACA:</strong> {{mensualidad.placa}}</p>
+            <p class="text-center"><strong>Tipo:</strong> {{mensualidad.tipo_vehiculo}}</p>
+            <p class="text-center"><strong>Cliente:</strong> {{mensualidad.nombre_dueno}}</p>
+            <p class="text-center"><strong>Tel:</strong> {{mensualidad.celular}}</p>
+            <p class="text-center"><strong>Doc:</strong> {{mensualidad.documento_identidad}}</p>
+        </div>
+
+        <div class="ticket-payment">
+            <table>
+                <tr>
+                    <td><strong>Meses:</strong></td>
+                    <td>{{cantidad_meses}}</td>
+                </tr>
+                <tr>
+                    <td><strong>Base:</strong></td>
+                    <td>${{valorSinIva}}</td>
+                </tr>
+                <tr>
+                    <td><strong>IVA:</strong></td>
+                    <td>${{valorIva}}</td>
+                </tr>
+                <tr class="total">
+                    <td><strong>Total:</strong></td>
+                    <td>${{valorTotal}}</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="factura-info">
+            <p style="text-align: center;">FACTURA ELECTRÓNICA</p>
+            <p style="text-align: center;">La factura será enviada en las próximas horas al correo:</p>
+            <p class="correo" style="text-align: center;">{{mensualidad.email}}</p>
+        </div>
+
+        <div class="ticket-validity">
+            <p class="text-center"><strong>VIGENCIA</strong></p>
+            <p class="text-center fechas">{{vigente_desde}} - {{vigente_hasta}}</p>
+        </div>
+
+        <div class="ticket-footer">
+            <p class="text-center"><small>{{metodo_pago}}{{#if referencia_pago}} - Ref: {{referencia_pago}}{{/if}}</small></p>
+            <p class="text-center"><small>Registrado por: {{usuario.nombre}}</small></p>
+            <p class="text-center"><small>{{fechaActual}}</small></p>
+            
+            <div class="terminos-condiciones">
+                <p class="termino">El parqueadero responde por la custodia del vehículo solo dentro de sus instalaciones y durante el tiempo registrado.</p>
+                <p class="termino">Solo se responde por objetos dejados en el vehículo si fueron declarados al ingreso.</p>
+                <p class="termino">Se recomienda no dejar objetos de valor en el vehículo.</p>
+                <p class="termino">Contamos con póliza de responsabilidad civil. Reclamaciones según procedimiento de la aseguradora.</p>
+                <p class="termino">Aplica tiempo de tolerancia. Superado, se cobrará según tarifa vigente.</p>
+                <p class="termino">El tiquete debe conservarse y presentarse al salir. En caso de pérdida, se verificará la titularidad del vehículo.</p>
+                <p class="termino">No nos hacemos responsables por daños o pérdidas por fuerza mayor, caso fortuito o hechos de terceros.</p>
+                <p class="termino">Usted está siendo grabado y monitoreado al interior de las instalaciones.</p>
+            </div>
+        </div>
+    </div>
+
+    {{#if previsualizar}}
+    <div class="ticket-actions">
+        <form id="formPago" action="/mensualidades/procesar-pago{{#unless mensualidad.es_nueva}}/{{mensualidad.id}}{{/unless}}" method="POST">
+            <input type="hidden" name="metodo_pago" value="{{metodo_pago}}">
+            <input type="hidden" name="referencia_pago" value="{{referencia_pago}}">
+            <input type="hidden" name="cantidad_meses" value="{{cantidad_meses}}">
+            {{#if mensualidad.es_nueva}}
+            <input type="hidden" name="es_nueva" value="1">
+            <input type="hidden" name="placa" value="{{mensualidad.placa}}">
+            <input type="hidden" name="nombre_dueno" value="{{mensualidad.nombre_dueno}}">
+            <input type="hidden" name="celular" value="{{mensualidad.celular}}">
+            <input type="hidden" name="email" value="{{mensualidad.email}}">
+            <input type="hidden" name="documento_identidad" value="{{mensualidad.documento_identidad}}">
+            <input type="hidden" name="tipo_vehiculo_id" value="{{mensualidad.tipo_vehiculo_id}}">
+            {{/if}}
+            <button type="submit" class="btn btn-success" onclick="imprimirYConfirmar(event)">Confirmar Pago</button>
+            <a href="javascript:history.back()" class="btn btn-secondary">Volver</a>
+        </form>
+    </div>
+    {{else}}
+    <div class="ticket-actions">
+        <button onclick="window.print()" class="btn btn-primary">Imprimir</button>
+        <a href="/mensualidades" class="btn btn-secondary">Volver</a>
+    </div>
+    {{/if}}
+</div>
+
+<style>
+/* Estilos generales */
+nav, .navbar, header {
+    display: none !important;
+}
+
+.ticket-container {
+    width: 80mm;
+    min-height: 210mm;
+    margin: 0 auto;
+    padding: 2mm;
+    font-size: 12px;
+    font-family: 'Arial', sans-serif';
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+}
+
+.ticket-header {
+    text-align: center;
+    margin-bottom: 2mm;
+    padding-bottom: 1mm;
+    border-bottom: 1px dashed #000;
+}
+
+.empresa-info {
+    margin-bottom: 1mm;
+    padding-bottom: 1mm;
+    border-bottom: 1px solid #000;
+}
+
+.empresa-info p {
+    margin: 0;
+    padding: 0;
+    font-size: 10px;
+    line-height: 1.2;
+    font-weight: bold;
+}
+
+.empresa-info .empresa-titulo {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 1mm;
+}
+
+.ticket-numero {
+    font-size: 14px !important;
+    font-weight: bold !important;
+    margin-top: 2mm !important;
+    border-top: 1px dashed #000;
+    padding-top: 2mm;
+}
+
+.ticket-header h2 {
+    font-size: 16px;
+    margin: 1mm 0 0 0;
+    padding: 0;
+    font-weight: bold;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.ticket-body {
+    flex: 1;
+}
+
+.ticket-info {
+    margin-bottom: 4mm;
+    padding: 2mm;
+    background-color: #f8f8f8;
+    border: 1px solid #000;
+    border-radius: 1mm;
+}
+
+.ticket-info .placa {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 1mm 0;
+    color: #000;
+}
+
+.ticket-info p {
+    margin: 1mm 0;
+    line-height: 1.2;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.ticket-payment {
+    margin: 4mm 0;
+}
+
+.ticket-payment table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+}
+
+.ticket-payment td {
+    padding: 1mm;
+    line-height: 1.2;
+}
+
+.ticket-payment .total {
+    border-top: 1px dashed #000;
+    font-weight: bold;
+    padding-top: 1mm;
+    margin-top: 1mm;
+    font-size: 14px;
+}
+
+.ticket-validity {
+    margin: 4mm 0;
+    padding: 2mm;
+    background-color: #f8f8f8;
+    border: 1px solid #000;
+    border-radius: 1mm;
+}
+
+.ticket-validity p {
+    margin: 1mm 0;
+    line-height: 1.2;
+    font-weight: bold;
+}
+
+.ticket-validity strong {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.ticket-validity .fechas {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000;
+    margin-top: 1mm;
+}
+
+.alert {
+    margin: 2mm 0 !important;
+    padding: 2mm !important;
+    border: 1px solid #000 !important;
+    background-color: white !important;
+}
+
+.alert-heading {
+    font-size: 16px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-weight: bold !important;
+}
+
+.ticket-footer {
+    margin-top: 4mm;
+    padding-top: 2mm;
+    border-top: 1px dashed #000;
+}
+
+.ticket-footer p {
+    margin: 1mm 0;
+    font-size: 10px;
+    line-height: 1.2;
+    font-weight: bold;
+}
+
+.terminos-condiciones {
+    margin-top: 2mm;
+    padding-top: 2mm;
+    border-top: 1px dashed #000;
+}
+
+.terminos-condiciones p {
+    margin: 1mm 0;
+    font-size: 8px;
+    line-height: 1.2;
+    text-align: justify;
+    font-weight: bold;
+}
+
+.ticket-actions {
+    text-align: center;
+    margin-top: 4mm;
+    padding-top: 2mm;
+    border-top: 1px dashed #000;
+}
+
+/* Estilos para impresión */
+@media print {
+    @page {
+        size: 80mm 210mm;
+        margin: 0;
+    }
+
+    html, body {
+        width: 80mm;
+        margin: 0;
+        padding: 0;
+        background-color: white;
+    }
+    
+    .navbar, header, footer, .ticket-actions {
+        display: none !important;
+    }
+    
+    .ticket-container {
+        position: relative;
+        width: 80mm;
+        margin: 0;
+        padding: 2mm;
+        border: none;
+    }
+    
+    .ticket-container * {
+        visibility: visible;
+        color: black;
+    }
+    
+    .alert {
+        border: 1px solid #000 !important;
+        color: #000 !important;
+        background-color: #fff !important;
+    }
+
+    .tipo-cobro-box {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
+
+/* Estilos para pantalla */
+@media screen {
+    .ticket-container {
+        margin: 20px auto;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+}
+
+.tipo-cobro-titulo {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 2mm;
+    text-decoration: underline;
+}
+
+.tipo-cobro-box {
+    padding: 4mm;
+    border-radius: 2mm;
+    margin: 2mm 0;
+    text-align: center;
+    border: 2px solid #000;
+}
+
+.tipo-cobro-box.mensual {
+    background-color: #d4edda;
+    border-color: #28a745;
+}
+
+.tipo-cobro-box.exento {
+    background-color: #cce5ff;
+    border-color: #0d6efd;
+}
+
+.tipo-cobro-box.tiempo {
+    background-color: #fff3cd;
+    border-color: #ffc107;
+}
+
+.tipo-cobro-estado {
+    font-size: 24px !important;
+    font-weight: bold !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: #000 !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.tipo-cobro-detalle {
+    font-size: 16px !important;
+    font-weight: bold !important;
+    margin: 2mm 0 !important;
+    color: #000 !important;
+    text-transform: uppercase;
+}
+
+.tipo-cobro-fecha {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 2mm;
+    color: #000;
+    border-top: 1px dashed #000;
+    padding-top: 2mm;
+}
+
+.desglose {
+    margin: 10px 0;
+    padding: 10px 0;
+    border-top: 1px dashed #000;
+    border-bottom: 1px dashed #000;
+}
+
+.desglose-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 3px 0;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.valores {
+    text-align: right;
+    margin: 10px 0;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.valores p {
+    margin: 3px 0;
+    font-weight: bold;
+}
+
+.total {
+    font-size: 14px;
+    text-align: right;
+    margin: 10px 0;
+    border-top: 1px dashed #000;
+    padding-top: 10px;
+    font-weight: bold;
+}
+
+.factura-info {
+    margin: 10px 0;
+    padding: 10px 0;
+    border-top: 1px dashed #000;
+    font-size: 12px;
+    line-height: 1.3;
+    font-weight: bold;
+}
+
+.factura-info p {
+    margin: 3px 0;
+    font-weight: bold;
+}
+
+.factura-info .correo {
+    font-size: 13px;
+    margin: 5px 0;
+    font-weight: bold;
+}
+
+.tiempo-total {
+    margin: 10px 0;
+    padding: 5px 0;
+    border-bottom: 1px dashed #000;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.observaciones-info {
+    margin: 10px 0;
+    padding: 5px 0;
+    border-top: 1px dashed #000;
+    font-size: 12px;
+    font-weight: bold;
+}
+</style>
+
+<script>
+function imprimirYConfirmar(event) {
+    event.preventDefault();
+    
+    const mediaQueryList = window.matchMedia('print');
+    mediaQueryList.addListener(function(mql) {
+        if (!mql.matches) {
+            document.getElementById('formPago').submit();
+        }
+    });
+
+    window.print();
+}
+</script> 

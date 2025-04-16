@@ -1,0 +1,79 @@
+<div class="card">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Detalles del Vehículo Exento</h2>
+            <a href="/vehiculos-exentos" class="btn btn-secondary">
+                <i class="bi bi-arrow-left me-1"></i>
+                Volver
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Placa</label>
+                <input type="text" class="form-control" value="{{vehiculo.placa}}" readonly>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Tipo de Vehículo</label>
+                <input type="text" class="form-control" value="{{vehiculo.tipo_vehiculo}}" readonly>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Nombre del Propietario</label>
+                <input type="text" class="form-control" value="{{vehiculo.nombre_propietario}}" readonly>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Documento del Propietario</label>
+                <input type="text" class="form-control" value="{{vehiculo.documento_propietario}}" readonly>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Fecha de Inicio</label>
+                <input type="text" class="form-control" value="{{formatDate vehiculo.fecha_inicio}}" readonly>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Fecha de Fin</label>
+                <input type="text" class="form-control" value="{{formatDate vehiculo.fecha_fin}}" readonly>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Motivo de Exención</label>
+            <textarea class="form-control" rows="3" readonly>{{vehiculo.motivo}}</textarea>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Estado</label>
+                <input type="text" class="form-control" value="{{#if (eq vehiculo.estado 1)}}Activo{{else}}Inactivo{{/if}}" readonly>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Registrado por</label>
+                <input type="text" class="form-control" value="{{vehiculo.usuario_nombre}}" readonly>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Fecha de Creación</label>
+                <input type="text" class="form-control" value="{{formatDate vehiculo.fecha_creacion}}" readonly>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Última Actualización</label>
+                <input type="text" class="form-control" value="{{formatDate vehiculo.fecha_actualizacion}}" readonly>
+            </div>
+        </div>
+
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+            <a href="/vehiculos-exentos/editar/{{vehiculo.id}}" class="btn btn-warning">
+                <i class="bi bi-pencil me-1"></i>
+                Editar
+            </a>
+        </div>
+    </div>
+</div> 

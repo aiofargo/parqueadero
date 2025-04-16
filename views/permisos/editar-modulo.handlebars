@@ -1,0 +1,48 @@
+<div class="card">
+    <div class="card-header">
+        <h3>Editar Módulo</h3>
+    </div>
+    <div class="card-body">
+        <form action="/permisos/modulos/editar/{{modulo.id}}" method="POST">
+            <div class="mb-3">
+                <label for="nombre" class="form-label">Nombre del Módulo</label>
+                <input type="text" class="form-control" id="nombre" name="nombre" value="{{modulo.nombre}}" required>
+            </div>
+            
+            <div class="mb-3">
+                <label for="descripcion" class="form-label">Descripción</label>
+                <textarea class="form-control" id="descripcion" name="descripcion" rows="3">{{modulo.descripcion}}</textarea>
+            </div>
+            
+            <div class="mb-3">
+                <label for="icono" class="form-label">Icono (Bootstrap Icons)</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="{{modulo.icono}}"></i></span>
+                    <input type="text" class="form-control" id="icono" name="icono" value="{{modulo.icono}}" placeholder="bi bi-people">
+                </div>
+                <small class="text-muted">Puedes encontrar los iconos en <a href="https://icons.getbootstrap.com/" target="_blank">Bootstrap Icons</a></small>
+            </div>
+            
+            <div class="mb-3">
+                <label for="ruta" class="form-label">Ruta del Módulo</label>
+                <div class="input-group">
+                    <span class="input-group-text">/</span>
+                    <input type="text" class="form-control" id="ruta" name="ruta" value="{{modulo.ruta}}" placeholder="usuarios">
+                </div>
+            </div>
+            
+            <div class="d-flex justify-content-between">
+                <a href="/permisos/modulos" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+// Actualizar el icono en tiempo real cuando se cambia el valor
+document.getElementById('icono').addEventListener('input', function() {
+    const iconSpan = this.previousElementSibling;
+    iconSpan.innerHTML = `<i class="${this.value}"></i>`;
+});
+</script> 

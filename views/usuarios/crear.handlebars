@@ -1,0 +1,58 @@
+<div class="card">
+    <div class="card-header">
+        <h2>Crear Nuevo Usuario</h2>
+    </div>
+    <div class="card-body">
+        <form action="/usuarios/crear" method="POST">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="nombres" class="form-label">Nombres</label>
+                    <input type="text" class="form-control" id="nombres" name="nombres" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="apellidos" class="form-label">Apellidos</label>
+                    <input type="text" class="form-control" id="apellidos" name="apellidos" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="documento" class="form-label">Documento de Identidad</label>
+                    <input type="text" class="form-control" id="documento" name="documento" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="correo" class="form-label">Correo Electrónico</label>
+                    <input type="email" class="form-control" id="correo" name="correo" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="celular" class="form-label">Celular</label>
+                    <input type="tel" class="form-control" id="celular" name="celular" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="rol_id" class="form-label">Rol</label>
+                    <select class="form-select" id="rol_id" name="rol_id" required>
+                        <option value="">Seleccione un rol</option>
+                        {{#each roles}}
+                        <option value="{{this.id}}">{{this.nombre}}</option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="/usuarios" class="btn btn-secondary me-md-2">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Crear Usuario</button>
+            </div>
+        </form>
+    </div>
+</div> 

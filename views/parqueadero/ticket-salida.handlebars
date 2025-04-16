@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Estilos generales */
+        nav, .navbar, header {
+            display: none !important;
+        }
+
+        .ticket-container {
+            width: 80mm;
+            height: 210mm;
+            margin: 0 auto;
+            padding: 2mm;
+            font-size: 10px;
+            font-family: 'Arial', sans-serif';
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            font-weight: bold;
+            overflow: hidden;
+        }
+
+        .ticket-header {
+            text-align: center;
+            margin-bottom: 1mm;
+            padding-bottom: 1mm;
+            border-bottom: 1px dashed #000;
+        }
+
+        .empresa-info {
+            margin-bottom: 1mm;
+            padding-bottom: 1mm;
+            border-bottom: 1px solid #000;
+        }
+
+        .empresa-info p {
+            margin: 0;
+            padding: 0;
+            font-size: 8px;
+            line-height: 1.1;
+            font-weight: bold;
+        }
+
+        .empresa-info .empresa-titulo {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 1mm;
+        }
+
+        .ticket-numero {
+            font-size: 12px !important;
+            font-weight: bold !important;
+            margin-top: 1mm !important;
+            border-top: 1px dashed #000;
+            padding-top: 1mm;
+        }
+
+        .ticket-header h2 {
+            font-size: 14px;
+            margin: 1mm 0 0 0;
+            padding: 0;
+            font-weight: bold;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .ticket-body {
+            flex: 1;
+        }
+
+        .ticket-info {
+            margin-bottom: 2mm;
+            padding: 1mm;
+            background-color: #f8f8f8;
+            border: 1px solid #000;
+            border-radius: 1mm;
+        }
+
+        .ticket-info .placa {
+            font-size: 16px;
+            font-weight: bold;
+            margin: 1mm 0;
+            color: #000;
+        }
+
+        .ticket-info p {
+            margin: 1mm 0;
+            line-height: 1.1;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .ticket-validity {
+            margin: 4mm 0;
+            padding: 2mm;
+            background-color: #f8f8f8;
+            border: 1px solid #000;
+            border-radius: 1mm;
+        }
+
+        .ticket-validity p {
+            margin: 1mm 0;
+            line-height: 1.2;
+            font-weight: bold;
+        }
+
+        .ticket-validity strong {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .ticket-validity .fechas {
+            font-size: 16px;
+            font-weight: bold;
+            color: #000;
+            margin-top: 1mm;
+        }
+
+        .alert {
+            margin: 2mm 0 !important;
+            padding: 2mm !important;
+            border: 1px solid #000 !important;
+            background-color: white !important;
+        }
+
+        .alert-heading {
+            font-size: 16px !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            font-weight: bold !important;
+        }
+
+        .ticket-footer {
+            margin-top: 4mm;
+            padding-top: 2mm;
+            border-top: 1px dashed #000;
+        }
+
+        .ticket-footer p {
+            margin: 1mm 0;
+            font-size: 10px;
+            line-height: 1.2;
+            font-weight: bold;
+        }
+
+        .terminos-condiciones {
+            margin-top: 1mm;
+            padding-top: 1mm;
+            border-top: 1px dashed #000;
+        }
+
+        .terminos-condiciones p {
+            margin: 0.5mm 0;
+            font-size: 7px;
+            line-height: 1.1;
+            text-align: justify;
+            font-weight: bold;
+        }
+
+        .ticket-actions {
+            text-align: center;
+            margin-top: 4mm;
+            padding-top: 2mm;
+            border-top: 1px dashed #000;
+        }
+
+        /* Estilos para impresión */
+        @media print {
+            @page {
+                size: 80mm 210mm;
+                margin: 0;
+            }
+
+            html, body {
+                width: 80mm;
+                height: 210mm;
+                margin: 0;
+                padding: 0;
+                background-color: white;
+            }
+            
+            .navbar, header, footer, .ticket-actions {
+                display: none !important;
+            }
+            
+            .ticket-container {
+                position: relative;
+                width: 80mm;
+                height: 210mm;
+                margin: 0;
+                padding: 2mm;
+                border: none;
+                overflow: hidden;
+                page-break-after: always;
+            }
+            
+            .ticket-container * {
+                visibility: visible;
+                color: black;
+            }
+            
+            .alert {
+                border: 1px solid #000 !important;
+                color: #000 !important;
+                background-color: #fff !important;
+            }
+
+            .tipo-cobro-box {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        /* Estilos para pantalla */
+        @media screen {
+            .ticket-container {
+                margin: 20px auto;
+                box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            }
+        }
+
+        .tipo-cobro-titulo {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 2mm;
+            text-decoration: underline;
+        }
+
+        .tipo-cobro-box {
+            padding: 4mm;
+            border-radius: 2mm;
+            margin: 2mm 0;
+            text-align: center;
+            border: 2px solid #000;
+        }
+
+        .tipo-cobro-box.mensual {
+            background-color: #d4edda;
+            border-color: #28a745;
+        }
+
+        .tipo-cobro-box.exento {
+            background-color: #cce5ff;
+            border-color: #0d6efd;
+        }
+
+        .tipo-cobro-box.tiempo {
+            background-color: #fff3cd;
+            border-color: #ffc107;
+        }
+
+        .tipo-cobro-estado {
+            font-size: 24px !important;
+            font-weight: bold !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            color: #000 !important;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tipo-cobro-detalle {
+            font-size: 16px !important;
+            font-weight: bold !important;
+            margin: 2mm 0 !important;
+            color: #000 !important;
+            text-transform: uppercase;
+        }
+
+        .tipo-cobro-fecha {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 2mm;
+            color: #000;
+            border-top: 1px dashed #000;
+            padding-top: 2mm;
+        }
+
+        .desglose {
+            margin: 5px 0;
+            padding: 5px 0;
+            border-top: 1px dashed #000;
+            border-bottom: 1px dashed #000;
+        }
+
+        .desglose-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 2px 0;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .valores {
+            text-align: right;
+            margin: 5px 0;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .valores p {
+            margin: 3px 0;
+            font-weight: bold;
+        }
+
+        .total {
+            font-size: 12px;
+            text-align: right;
+            margin: 5px 0;
+            border-top: 1px dashed #000;
+            padding-top: 5px;
+            font-weight: bold;
+        }
+
+        .factura-info {
+            margin: 5px 0;
+            padding: 5px 0;
+            border-top: 1px dashed #000;
+            font-size: 10px;
+            line-height: 1.2;
+            font-weight: bold;
+        }
+
+        .factura-info p {
+            margin: 3px 0;
+            font-weight: bold;
+        }
+
+        .factura-info .correo {
+            font-size: 13px;
+            margin: 5px 0;
+            font-weight: bold;
+        }
+
+        .tiempo-total {
+            margin: 10px 0;
+            padding: 5px 0;
+            border-bottom: 1px dashed #000;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .observaciones-info {
+            margin: 10px 0;
+            padding: 5px 0;
+            border-top: 1px dashed #000;
+            font-size: 12px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="ticket-container">
+        <div class="ticket-header">
+            <div class="empresa-info">
+                <p class="text-center empresa-titulo">JUNTA DE ACCIÓN COMUNAL INGLES</p>
+                <p class="text-center">NIT: 860 038 190 - 6</p>
+                <p class="text-center">DIRECCIÓN: DIAGONAL 41 A SUR # 26-86</p>
+                <p class="text-center">VIGILADOS POR SUPERINTENDENCIA DE INDUSTRIA Y COMERCIO</p>
+                <p class="text-center">MATRÍCULA N° 03685293</p>
+                <p class="text-center">SUPERINTENDENCIA DE VIGILANCIA Y SEGURIDAD PRIVADA Y UAECOB</p>
+                <p class="text-center">SEGURO DE RESPONSABILIDAD CIVIL N° 23424323425</p>
+                <p class="text-center ticket-numero">TICKET N° {{numeroTicket}}</p>
+            </div>
+            <h2 class="text-center">COMPROBANTE DE SALIDA</h2>
+        </div>
+
+        <div class="ticket-body">
+            <div class="ticket-info">
+                <p class="text-center placa"><strong>PLACA:</strong> {{placa}}</p>
+                <p class="text-center"><strong>Tipo de Vehículo:</strong> {{tipoVehiculo}}</p>
+                <p class="text-center"><strong>Fecha/Hora Entrada:</strong> {{fechaEntrada}}</p>
+                <p class="text-center"><strong>Fecha/Hora Salida:</strong> {{fechaSalida}}</p>
+            </div>
+
+            {{#if esTiempo}}
+                <div class="tiempo-total">
+                    <p>Tiempo Total: 
+                        {{#if tiempoTotal.dias}}{{tiempoTotal.dias}} día(s), {{/if}}
+                        {{tiempoTotal.horas}} hora(s), {{tiempoTotal.minutos}} minuto(s)
+                    </p>
+                </div>
+
+                <div class="desglose">
+                    <p>Tarifas aplicadas:</p>
+                    {{#each desgloseCobro}}
+                    <div class="desglose-item">
+                        <span>{{this.concepto}}</span>
+                        <span>${{formatNumber this.valor}}</span>
+                    </div>
+                    {{/each}}
+                </div>
+
+                <div class="valores">
+                    <p><strong>Subtotal:</strong> ${{formatNumber valor}}</p>
+                    <p><strong>IVA ({{porcentajeIva}}%):</strong> ${{formatNumber valorIva}}</p>
+                    <div class="total">
+                        <p style="font-size: 16px;"><strong>TOTAL PAGADO:</strong> ${{formatNumber valorTotal}}</p>
+                    </div>
+                </div>
+
+                {{#if requiereFactura}}
+                <div class="factura-info">
+                    <p style="text-align: center;">FACTURA ELECTRÓNICA SOLICITADA</p>
+                    <p style="text-align: center;">La factura será enviada en las próximas horas al correo:</p>
+                    <p class="correo" style="text-align: center;">{{correoElectronico}}</p>
+                </div>
+                {{else}}
+                <div class="factura-info">
+                    <p style="text-align: center;">CLIENTE FINAL</p>
+                    <p style="text-align: center;">La facturación diaria será remitida a la DIAN</p>
+                    <p style="text-align: center;">dentro de las 24 horas siguientes</p>
+                </div>
+                {{/if}}
+            {{/if}}
+
+            {{#if esMensual}}
+                <p>Mensualidad Vigente Hasta: {{mensualidadVence}}</p>
+            {{/if}}
+
+            {{#if esExento}}
+                <p>Exención Vigente Hasta: {{exentoVence}}</p>
+            {{/if}}
+
+            {{#if observacionesEntrada}}
+            <div class="observaciones-info">
+                <p style="text-align: left; text-decoration: underline;">Observaciones al Ingreso:</p>
+                <p style="text-align: left;">{{observacionesEntrada}}</p>
+            </div>
+            {{/if}}
+
+            {{#if observacionesSalida}}
+            <div class="observaciones-info">
+                <p style="text-align: left; text-decoration: underline;">Observaciones a la Salida:</p>
+                <p style="text-align: left;">{{observacionesSalida}}</p>
+            </div>
+            {{/if}}
+
+            <div class="ticket-footer">
+                <p><strong>Registrado por:</strong> {{session.usuario.nombres}} {{session.usuario.apellidos}}</p>
+                <p><strong>Fecha/Hora:</strong> {{fechaActual}}</p>
+                <p style="margin-top: 15px; font-style: italic;">No nos hacemos responsables por daños o pérdidas no reportadas.</p>
+                <p style="font-size: 14px; margin-top: 10px;">¡Gracias por su visita!</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="ticket-actions">
+        <button onclick="imprimirYFinalizar()" class="btn btn-primary">
+            <i class="bi bi-printer"></i> Imprimir y Finalizar
+        </button>
+    </div>
+
+    <script>
+    function imprimirYFinalizar() {
+        // Configurar el evento onafterprint antes de imprimir
+        window.onafterprint = function() {
+            // Redirigir después de un pequeño delay para asegurar que la impresión se complete
+            setTimeout(function() {
+                window.location.href = '/parqueadero/salida';
+            }, 500);
+        };
+
+        // Si el navegador no soporta onafterprint, redirigir después de un tiempo razonable
+        setTimeout(function() {
+            if (!window.onafterprint) {
+                window.location.href = '/parqueadero/salida';
+            }
+        }, 2000);
+
+        // Imprimir el ticket
+        window.print();
+    }
+
+    // Prevenir que el usuario pueda volver atrás
+    window.history.pushState(null, '', window.location.href);
+    window.onpopstate = function() {
+        window.history.pushState(null, '', window.location.href);
+    };
+    </script>
+</body>
+</html> 

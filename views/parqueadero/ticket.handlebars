@@ -1,0 +1,403 @@
+{{!-- Contenedor principal del ticket --}}
+<div class="ticket-container">
+    {{!-- Encabezado del ticket con información de la empresa --}}
+    <div class="ticket-header">
+        <div class="empresa-info">
+            <p class="text-center empresa-titulo">JUNTA DE ACCIÓN COMUNAL INGLES</p>
+            <p class="text-center">NIT: 860 038 190 - 6</p>
+            <p class="text-center">DIRECCIÓN: DIAGONAL 41 A SUR # 26-86</p>
+            <p class="text-center">VIGILADOS POR SUPERINTENDENCIA DE INDUSTRIA Y COMERCIO</p>
+            <p class="text-center">MATRÍCULA N° 03685293</p>
+            <p class="text-center">SUPERINTENDENCIA DE VIGILANCIA Y SEGURIDAD PRIVADA Y UAECOB</p>
+            <p class="text-center">SEGURO DE RESPONSABILIDAD CIVIL N° 23424323425</p>
+            <p class="text-center ticket-numero">TICKET N° {{numeroTicket}}</p>
+        </div>
+        <h2 class="text-center">TICKET DE ENTRADA</h2>
+    </div>
+
+    <div class="ticket-body">
+        {{!-- Información del vehículo --}}
+        <div class="ticket-info">
+            <p class="text-center placa">PLACA: {{placa}}</p>
+            <p class="text-center">TIPO DE VEHÍCULO: {{tipoVehiculo}}</p>
+            <p class="text-center">FECHA Y HORA: {{fechaEntrada}}</p>
+            {{#if observaciones}}
+            <div class="observaciones-box">
+                <p class="observaciones-titulo">OBSERVACIONES:</p>
+                <p class="observaciones-texto">{{observaciones}}</p>
+            </div>
+            {{/if}}
+        </div>
+
+        {{!-- Información del tipo de cobro --}}
+        <div class="ticket-validity">
+            <div class="tipo-cobro-box {{#if mensualidadVence}}mensual{{else}}{{#if (eq tipoCobro 'VEHÍCULO EXENTO')}}exento{{else}}tiempo{{/if}}{{/if}}">
+                {{#if mensualidadVence}}
+                    <div class="tipo-cobro-estado">MENSUALIDAD</div>
+                    <div class="tipo-cobro-detalle">VIGENTE HASTA:</div>
+                    <div class="tipo-cobro-fecha">{{mensualidadVence}}</div>
+                {{else}}
+                    {{#if (eq tipoCobro 'VEHÍCULO EXENTO')}}
+                        <div class="tipo-cobro-estado">VEHÍCULO EXENTO</div>
+                        <div class="tipo-cobro-detalle">DE PAGO</div>
+                    {{else}}
+                        <div class="tipo-cobro-estado">PAGO POR TIEMPO</div>
+                        <div class="tipo-cobro-detalle">SEGÚN TARIFA VIGENTE</div>
+                    {{/if}}
+                {{/if}}
+            </div>
+        </div>
+
+        {{!-- Pie del ticket --}}
+        <div class="ticket-footer">
+            <p class="text-center"><small>REGISTRADO POR: {{session.usuario.nombres}} {{session.usuario.apellidos}}</small></p>
+            
+            {{!-- Términos y condiciones --}}
+            <div class="terminos-condiciones">
+                <p class="termino">EL PARQUEADERO RESPONDE POR LA CUSTODIA DEL VEHÍCULO SOLO DENTRO DE SUS INSTALACIONES Y DURANTE EL TIEMPO REGISTRADO.</p>
+                <p class="termino">SOLO SE RESPONDE POR OBJETOS DEJADOS EN EL VEHÍCULO SI FUERON DECLARADOS AL INGRESO.</p>
+                <p class="termino">SE RECOMIENDA NO DEJAR OBJETOS DE VALOR EN EL VEHÍCULO.</p>
+                <p class="termino">CONTAMOS CON PÓLIZA DE RESPONSABILIDAD CIVIL. RECLAMACIONES SEGÚN PROCEDIMIENTO DE LA ASEGURADORA.</p>
+                <p class="termino">APLICA TIEMPO DE TOLERANCIA. SUPERADO, SE COBRARÁ SEGÚN TARIFA VIGENTE.</p>
+                <p class="termino">EL TIQUETE DEBE CONSERVARSE Y PRESENTARSE AL SALIR. EN CASO DE PÉRDIDA, SE VERIFICARÁ LA TITULARIDAD DEL VEHÍCULO.</p>
+                <p class="termino">NO NOS HACEMOS RESPONSABLES POR DAÑOS O PÉRDIDAS POR FUERZA MAYOR, CASO FORTUITO O HECHOS DE TERCEROS.</p>
+                <p class="termino">USTED ESTÁ SIENDO GRABADO Y MONITOREADO AL INTERIOR DE LAS INSTALACIONES.</p>
+            </div>
+        </div>
+    </div>
+
+    {{!-- Botones de acción --}}
+    <div class="ticket-actions">
+        <button onclick="imprimirYFinalizar()" class="btn btn-primary btn-lg mb-2">
+            <i class="bi bi-printer me-2"></i>
+            Imprimir Ticket
+        </button>
+        <a href="/parqueadero" class="btn btn-secondary btn-lg">
+            <i class="bi bi-arrow-left me-2"></i>
+            Volver
+        </a>
+    </div>
+</div>
+
+<script>
+function imprimirYFinalizar() {
+    // Configurar el evento onafterprint antes de imprimir
+    window.onafterprint = function() {
+        // Redirigir después de un pequeño delay para asegurar que la impresión se complete
+        setTimeout(function() {
+            window.location.href = '/parqueadero';
+        }, 500);
+    };
+
+    // Si el navegador no soporta onafterprint, redirigir después de un tiempo razonable
+    setTimeout(function() {
+        if (!window.onafterprint) {
+            window.location.href = '/parqueadero';
+        }
+    }, 2000);
+
+    // Imprimir el ticket
+    window.print();
+}
+
+// Prevenir que el usuario pueda volver atrás
+window.history.pushState(null, '', window.location.href);
+window.onpopstate = function() {
+    window.history.pushState(null, '', window.location.href);
+};
+</script>
+
+<style>
+/* Estilos generales */
+nav, .navbar, header {
+    display: none !important;
+}
+
+.ticket-container {
+    width: 80mm;
+    min-height: 210mm;
+    margin: 0 auto;
+    padding: 2mm;
+    font-size: 12px;
+    font-family: 'Arial', sans-serif';
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+}
+
+.ticket-header {
+    text-align: center;
+    margin-bottom: 2mm;
+    padding-bottom: 1mm;
+    border-bottom: 1px dashed #000;
+}
+
+.empresa-info {
+    margin-bottom: 1mm;
+    padding-bottom: 1mm;
+    border-bottom: 1px solid #000;
+}
+
+.empresa-info p {
+    margin: 0;
+    padding: 0;
+    font-size: 10px;
+    line-height: 1.2;
+    font-weight: bold;
+}
+
+.empresa-info .empresa-titulo {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 1mm;
+}
+
+.ticket-numero {
+    font-size: 14px !important;
+    font-weight: bold !important;
+    margin-top: 2mm !important;
+    border-top: 1px dashed #000;
+    padding-top: 2mm;
+}
+
+.ticket-header h2 {
+    font-size: 16px;
+    margin: 1mm 0 0 0;
+    padding: 0;
+    font-weight: bold;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.ticket-body {
+    flex: 1;
+}
+
+.ticket-info {
+    margin-bottom: 4mm;
+    padding: 2mm;
+    background-color: #f8f8f8;
+    border: 1px solid #000;
+    border-radius: 1mm;
+}
+
+.ticket-info .placa {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 1mm 0;
+    color: #000;
+}
+
+.ticket-info p {
+    margin: 1mm 0;
+    line-height: 1.2;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.ticket-validity {
+    margin: 4mm 0;
+    padding: 2mm;
+    background-color: #f8f8f8;
+    border: 1px solid #000;
+    border-radius: 1mm;
+}
+
+.ticket-validity p {
+    margin: 1mm 0;
+    line-height: 1.2;
+    font-weight: bold;
+}
+
+.ticket-validity strong {
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.ticket-validity .fechas {
+    font-size: 16px;
+    font-weight: bold;
+    color: #000;
+    margin-top: 1mm;
+}
+
+.alert {
+    margin: 2mm 0 !important;
+    padding: 2mm !important;
+    border: 1px solid #000 !important;
+    background-color: white !important;
+}
+
+.alert-heading {
+    font-size: 16px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-weight: bold !important;
+}
+
+.ticket-footer {
+    margin-top: 4mm;
+    padding-top: 2mm;
+    border-top: 1px dashed #000;
+}
+
+.ticket-footer p {
+    margin: 1mm 0;
+    font-size: 10px;
+    line-height: 1.2;
+    font-weight: bold;
+}
+
+.terminos-condiciones {
+    margin-top: 2mm;
+    padding-top: 2mm;
+    border-top: 1px dashed #000;
+}
+
+.terminos-condiciones p {
+    margin: 1mm 0;
+    font-size: 8px;
+    line-height: 1.2;
+    text-align: justify;
+    font-weight: bold;
+}
+
+.ticket-actions {
+    text-align: center;
+    margin-top: 4mm;
+    padding-top: 2mm;
+    border-top: 1px dashed #000;
+}
+
+/* Estilos para impresión */
+@media print {
+    @page {
+        size: 80mm 210mm;
+        margin: 0;
+    }
+
+    html, body {
+        width: 80mm;
+        margin: 0;
+        padding: 0;
+        background-color: white;
+    }
+    
+    .navbar, header, footer, .ticket-actions {
+        display: none !important;
+    }
+    
+    .ticket-container {
+        position: relative;
+        width: 80mm;
+        margin: 0;
+        padding: 2mm;
+        border: none;
+    }
+    
+    .ticket-container * {
+        visibility: visible;
+        color: black;
+    }
+    
+    .alert {
+        border: 1px solid #000 !important;
+        color: #000 !important;
+        background-color: #fff !important;
+    }
+
+    .tipo-cobro-box {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+}
+
+/* Estilos para pantalla */
+@media screen {
+    .ticket-container {
+        margin: 20px auto;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+}
+
+.tipo-cobro-titulo {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 2mm;
+    text-decoration: underline;
+}
+
+.tipo-cobro-box {
+    padding: 4mm;
+    border-radius: 2mm;
+    margin: 2mm 0;
+    text-align: center;
+    border: 2px solid #000;
+}
+
+.tipo-cobro-box.mensual {
+    background-color: #d4edda;
+    border-color: #28a745;
+}
+
+.tipo-cobro-box.exento {
+    background-color: #cce5ff;
+    border-color: #0d6efd;
+}
+
+.tipo-cobro-box.tiempo {
+    background-color: #fff3cd;
+    border-color: #ffc107;
+}
+
+.tipo-cobro-estado {
+    font-size: 24px !important;
+    font-weight: bold !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: #000 !important;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.tipo-cobro-detalle {
+    font-size: 16px !important;
+    font-weight: bold !important;
+    margin: 2mm 0 !important;
+    color: #000 !important;
+    text-transform: uppercase;
+}
+
+.tipo-cobro-fecha {
+    font-size: 20px;
+    font-weight: bold;
+    margin-top: 2mm;
+    color: #000;
+    border-top: 1px dashed #000;
+    padding-top: 2mm;
+}
+
+.observaciones-box {
+    margin-top: 2mm;
+    padding: 2mm;
+    border-top: 1px dashed #000;
+}
+
+.observaciones-titulo {
+    font-weight: bold;
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+}
+
+.observaciones-texto {
+    margin: 1mm 0 0 0;
+    padding: 0;
+    font-size: 11px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+</style> 

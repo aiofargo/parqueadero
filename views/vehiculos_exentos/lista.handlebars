@@ -1,0 +1,66 @@
+<div class="card">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Vehículos Exentos</h2>
+            <a href="/vehiculos-exentos/crear" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-1"></i>
+                Nuevo Vehículo Exento
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <form method="GET" action="/vehiculos-exentos" class="mb-4">
+            <div class="row">
+                <div class="col-md-4">
+                    <select name="estado" class="form-select" onchange="this.form.submit()">
+                        <option value="">Todos los estados</option>
+                        <option value="1" {{#if (eq estado "1")}}selected{{/if}}>Activos</option>
+                        <option value="0" {{#if (eq estado "0")}}selected{{/if}}>Inactivos</option>
+                    </select>
+                </div>
+            </div>
+        </form>
+
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Placa</th>
+                        <th>Propietario</th>
+                        <th>Documento</th>
+                        <th>Tipo Vehículo</th>
+                        <th>Fecha Inicio</th>
+                        <th>Fecha Fin</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each vehiculos}}
+                    <tr>
+                        <td>{{placa}}</td>
+                        <td>{{nombre_propietario}}</td>
+                        <td>{{documento_propietario}}</td>
+                        <td>{{tipo_vehiculo}}</td>
+                        <td>{{formatDate fecha_inicio}}</td>
+                        <td>{{formatDate fecha_fin}}</td>
+                        <td>
+                            <span class="badge {{#if (eq estado 1)}}bg-success{{else}}bg-danger{{/if}}">
+                                {{#if (eq estado 1)}}Activo{{else}}Inactivo{{/if}}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="/vehiculos-exentos/editar/{{id}}" class="btn btn-sm btn-warning">
+                                <i class="bi bi-pencil"></i>
+                            </a>
+                            <a href="/vehiculos-exentos/ver/{{id}}" class="btn btn-sm btn-info">
+                                <i class="bi bi-eye"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div> 

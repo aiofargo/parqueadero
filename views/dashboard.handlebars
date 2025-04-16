@@ -1,0 +1,66 @@
+<div class="container">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">Bienvenido, {{usuario.nombres}} {{usuario.apellidos}}</h2>
+                    <p class="card-text">
+                        <strong>Documento:</strong> {{usuario.documento}}<br>
+                        <strong>Rol:</strong> {{usuario.rol_nombre}}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        {{#each permisos}}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="{{this.icono}} me-2"></i>
+                        {{this.modulo}}
+                    </h5>
+                    <p class="card-text">
+                        {{#if (eq this.modulo "Parqueadero")}}
+                        Gestione las entradas y salidas de vehículos.
+                        {{else if (eq this.modulo "Mensualidades")}}
+                        Administre los pagos mensuales del parqueadero.
+                        {{else if (eq this.modulo "Tipos de Vehículos")}}
+                        Administre los tipos de vehículos y tarifas.
+                        {{else if (eq this.modulo "Vehículos Exentos")}}
+                        Administre los vehículos exentos de pago.
+                        {{else if (eq this.modulo "Roles")}}
+                        Administre los roles y permisos.
+                        {{else if (eq this.modulo "Permisos")}}
+                        Configure los permisos por rol y administre los módulos del sistema.
+                        {{else if (eq this.modulo "Usuarios")}}
+                        Gestione los usuarios del sistema.
+                        {{else}}
+                        Acceda al módulo {{this.modulo}}.
+                        {{/if}}
+                    </p>
+                    <div class="d-grid gap-2">
+                        {{#if (eq this.modulo "Permisos")}}
+                        <a href="/permisos/gestionar" class="btn btn-primary mb-2">
+                            <i class="bi bi-shield-lock"></i>
+                            Gestionar Permisos
+                        </a>
+                        <a href="/permisos/modulos" class="btn btn-outline-primary">
+                            <i class="bi bi-grid"></i>
+                            Gestionar Módulos
+                        </a>
+                        {{else}}
+                        <a href="{{this.ruta}}" class="btn btn-primary">
+                            <i class="bi bi-arrow-right"></i>
+                            Ir a {{this.modulo}}
+                        </a>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{/each}}
+    </div>
+</div> 

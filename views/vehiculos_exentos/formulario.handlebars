@@ -1,0 +1,101 @@
+<div class="card">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">{{#if vehiculo}}Editar{{else}}Crear{{/if}} Vehículo Exento</h2>
+            <a href="/vehiculos-exentos" class="btn btn-secondary">
+                <i class="bi bi-arrow-left me-1"></i>
+                Volver
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <form action="{{#if vehiculo}}/vehiculos-exentos/editar/{{vehiculo.id}}{{else}}/vehiculos-exentos/crear{{/if}}" method="POST">
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="placa" class="form-label">Placa</label>
+                    <input type="text" class="form-control" id="placa" name="placa" 
+                           value="{{#if vehiculo}}{{vehiculo.placa}}{{/if}}" required 
+                           pattern="[A-Za-z0-9]+" style="text-transform: uppercase;">
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="tipo_vehiculo_id" class="form-label">Tipo de Vehículo</label>
+                    <select class="form-select" id="tipo_vehiculo_id" name="tipo_vehiculo_id" required>
+                        <option value="">Seleccione un tipo de vehículo</option>
+                        {{#each tiposVehiculos}}
+                        <option value="{{id}}" {{#if ../vehiculo}}{{#if (eq ../vehiculo.tipo_vehiculo_id id)}}selected{{/if}}{{/if}}>
+                            {{nombre}}
+                        </option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="nombre_propietario" class="form-label">Nombre del Propietario</label>
+                    <input type="text" class="form-control" id="nombre_propietario" name="nombre_propietario" 
+                           value="{{#if vehiculo}}{{vehiculo.nombre_propietario}}{{/if}}" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="documento_propietario" class="form-label">Documento del Propietario</label>
+                    <input type="text" class="form-control" id="documento_propietario" name="documento_propietario" 
+                           value="{{#if vehiculo}}{{vehiculo.documento_propietario}}{{/if}}" required>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label for="fecha_inicio" class="form-label">Fecha de Inicio</label>
+                    <input type="date" class="form-control" id="fecha_inicio" name="fecha_inicio" 
+                           value="{{#if vehiculo}}{{formatDateInput vehiculo.fecha_inicio}}{{/if}}" required>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label for="fecha_fin" class="form-label">Fecha de Fin</label>
+                    <input type="date" class="form-control" id="fecha_fin" name="fecha_fin" 
+                           value="{{#if vehiculo}}{{formatDateInput vehiculo.fecha_fin}}{{/if}}" required>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="motivo" class="form-label">Motivo de Exención</label>
+                <textarea class="form-control" id="motivo" name="motivo" rows="3" required>{{#if vehiculo}}{{vehiculo.motivo}}{{/if}}</textarea>
+            </div>
+
+            {{#if vehiculo}}
+            <div class="mb-3">
+                <label for="estado" class="form-label">Estado</label>
+                <select class="form-select" id="estado" name="estado">
+                    <option value="1" {{#if vehiculo}}{{#if (eq vehiculo.estado 1)}}selected{{/if}}{{/if}}>Activo</option>
+                    <option value="0" {{#if vehiculo}}{{#if (eq vehiculo.estado 0)}}selected{{/if}}{{/if}}>Inactivo</option>
+                </select>
+            </div>
+            {{/if}}
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="submit" class="btn btn-primary">
+                    {{#if vehiculo}}Actualizar{{else}}Crear{{/if}} Vehículo Exento
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Validación de fechas
+    document.addEventListener('DOMContentLoaded', function() {
+        const fechaInicio = document.getElementById('fecha_inicio');
+        const fechaFin = document.getElementById('fecha_fin');
+
+        function validarFechas() {
+            if (fechaInicio.value && fechaFin.value) {
+                if (fechaInicio.value > fechaFin.value) {
+                    alert('La fecha de fin no puede ser anterior a la fecha de inicio');
+                    fechaFin.value = fechaInicio.value;
+                }
+            }
+        }
+
+        fechaInicio.addEventListener('change', validarFechas);
+        fechaFin.addEventListener('change', validarFechas);
+    });
+</script> 

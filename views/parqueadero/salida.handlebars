@@ -1,0 +1,306 @@
+{{#if error}}
+<div class="alert alert-danger">{{error}}</div>
+{{/if}}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h3 class="mb-0">Registrar Salida de Vehículo</h3>
+                </div>
+                <div class="card-body">
+                    <form id="formSalida" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="placa" class="form-label">Placa del Vehículo</label>
+                            <div class="input-group">
+                                <input type="text" class="form-control" id="placa" name="placa" required maxlength="7">
+                                <button type="button" class="btn btn-primary" id="verificarPlaca">
+                                    <i class="bi bi-search me-2"></i>Verificar
+                                </button>
+                            </div>
+                            <div class="invalid-feedback">
+                                Por favor ingrese la placa del vehículo
+                            </div>
+                        </div>
+                    </form>
+
+                    <div id="infoVehiculo" class="d-none">
+                        <div class="alert alert-info mb-3">
+                            <h4 class="alert-heading">Información del Vehículo</h4>
+                            <p class="mb-1"><strong>Tipo de Vehículo:</strong> <span id="tipoVehiculo"></span></p>
+                            <p class="mb-1"><strong>Fecha de Entrada:</strong> <span id="fechaEntrada"></span></p>
+                            <p class="mb-1"><strong>Fecha de Salida:</strong> <span id="fechaSalida"></span></p>
+                            <div id="infoTiempo" class="d-none">
+                                <p class="mb-1"><strong>Tiempo Total:</strong> <span id="tiempoTotal"></span></p>
+                                <p class="mb-1"><strong>Tiempo a Cobrar:</strong> <span id="tiempoACobrar"></span></p>
+                                <p class="mb-0"><strong>Valor a Pagar:</strong> <span id="valorPagar" class="fs-4"></span></p>
+                            </div>
+                            <div id="infoMensual" class="d-none">
+                                <p class="mb-0"><strong>Mensualidad Vigente Hasta:</strong> <span id="vencimientoMensual"></span></p>
+                            </div>
+                            <div id="infoExento" class="d-none">
+                                <p class="mb-0"><strong>Exención Vigente Hasta:</strong> <span id="vencimientoExento"></span></p>
+                            </div>
+                        </div>
+
+                        <form id="formProcesarSalida" method="POST" action="/parqueadero/procesar-salida">
+                            <input type="hidden" id="movimientoId" name="movimientoId">
+                            <input type="hidden" id="valor" name="valor">
+
+                            <div class="mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="requiereFactura" name="requiereFactura">
+                                    <label class="form-check-label" for="requiereFactura">
+                                        ¿Requiere factura electrónica?
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div id="datosFactura" class="d-none">
+                                <div class="mb-3">
+                                    <label for="correoElectronico" class="form-label">Correo Electrónico *</label>
+                                    <input type="email" class="form-control" id="correoElectronico" name="correoElectronico">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="documentoIdentidad" class="form-label">Documento de Identidad *</label>
+                                    <input type="text" class="form-control" id="documentoIdentidad" name="documentoIdentidad">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="nombreCompleto" class="form-label">Nombre Completo *</label>
+                                    <input type="text" class="form-control" id="nombreCompleto" name="nombreCompleto">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="numeroCelular" class="form-label">Número de Celular *</label>
+                                    <input type="tel" class="form-control" id="numeroCelular" name="numeroCelular">
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="observaciones_salida" class="form-label">Observaciones de Salida</label>
+                                <textarea class="form-control" id="observaciones_salida" name="observaciones_salida" 
+                                        rows="3" placeholder="Registre aquí cualquier novedad, daño o reclamación al momento de la salida"></textarea>
+                                <div class="form-text">Si hay alguna reclamación o novedad al momento de la salida, regístrela aquí.</div>
+                            </div>
+
+                            <button type="submit" class="btn btn-success btn-lg w-100">
+                                <i class="bi bi-check-circle me-2"></i>Procesar Salida
+                            </button>
+                        </form>
+                    </div>
+
+                    {{!-- Separador --}}
+                    <hr class="mt-5 mb-4">
+
+                    {{!-- Tabla de vehículos en patio --}}
+                    <div class="vehiculos-patio">
+                        <h4 class="mb-3 d-flex align-items-center">
+                            <i class="bi bi-car-front me-2"></i>
+                            Vehículos en Patio
+                            <span class="badge bg-secondary ms-2">{{vehiculosEnPatio.length}}</span>
+                        </h4>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th>Placa</th>
+                                        <th>Tipo</th>
+                                        <th>Entrada</th>
+                                        <th>Tipo Cobro</th>
+                                        <th>Vencimiento</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {{#each vehiculosEnPatio}}
+                                    <tr>
+                                        <td class="align-middle">{{this.placa}}</td>
+                                        <td class="align-middle">{{this.tipo_vehiculo}}</td>
+                                        <td class="align-middle">{{this.fecha_entrada}}</td>
+                                        <td class="align-middle">
+                                            <span class="badge {{#if (eq this.tipo_cobro 'MENSUAL')}}bg-success
+                                                  {{else if (eq this.tipo_cobro 'EXENTO')}}bg-primary
+                                                  {{else}}bg-warning text-dark{{/if}}">
+                                                {{this.tipo_cobro}}
+                                            </span>
+                                        </td>
+                                        <td class="align-middle">
+                                            {{#if this.fecha_vencimiento}}
+                                                {{this.fecha_vencimiento}}
+                                            {{else}}
+                                                -
+                                            {{/if}}
+                                        </td>
+                                        <td class="align-middle">
+                                            <button class="btn btn-sm btn-primary btn-verificar-placa" 
+                                                    data-placa="{{this.placa}}">
+                                                <i class="bi bi-search"></i> Verificar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    {{else}}
+                                    <tr>
+                                        <td colspan="6" class="text-center">No hay vehículos en el patio</td>
+                                    </tr>
+                                    {{/each}}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Agregar SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const formSalida = document.getElementById('formSalida');
+    const btnVerificar = document.getElementById('verificarPlaca');
+    const infoVehiculo = document.getElementById('infoVehiculo');
+    const infoTiempo = document.getElementById('infoTiempo');
+    const infoMensual = document.getElementById('infoMensual');
+    const infoExento = document.getElementById('infoExento');
+    const inputPlaca = document.getElementById('placa');
+
+    btnVerificar.addEventListener('click', async function() {
+        if (!inputPlaca.value.trim()) {
+            inputPlaca.classList.add('is-invalid');
+            return;
+        }
+
+        try {
+            const response = await fetch(`/parqueadero/verificar-salida?placa=${inputPlaca.value.trim()}`);
+            let data;
+            
+            try {
+                data = await response.json();
+            } catch (e) {
+                console.error('Error al parsear respuesta:', e);
+                throw new Error('Error al procesar la respuesta del servidor');
+            }
+
+            if (!response.ok) {
+                throw new Error(data.mensaje || 'Error al verificar el vehículo');
+            }
+
+            if (data.error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.mensaje
+                });
+                infoVehiculo.classList.add('d-none');
+                return;
+            }
+
+            // Mostrar información básica
+            document.getElementById('tipoVehiculo').textContent = data.tipoVehiculo;
+            document.getElementById('fechaEntrada').textContent = data.fechaEntrada;
+            document.getElementById('fechaSalida').textContent = data.fechaSalida;
+            document.getElementById('movimientoId').value = data.movimientoId;
+            document.getElementById('valor').value = data.valor || 0;
+
+            // Ocultar todos los bloques de información
+            infoTiempo.classList.add('d-none');
+            infoMensual.classList.add('d-none');
+            infoExento.classList.add('d-none');
+
+            // Mostrar bloque según el tipo
+            if (data.tipo === 'TIEMPO') {
+                infoTiempo.classList.remove('d-none');
+                document.getElementById('tiempoTotal').textContent = `${data.minutos} minutos`;
+                document.getElementById('tiempoACobrar').textContent = `${data.minutosACobrar} minutos${data.esSabado ? ' (1 hora gratis sábado)' : ''}`;
+                document.getElementById('valorPagar').textContent = `$${data.valor.toLocaleString()}`;
+                // Mostrar opción de factura solo para cobro por tiempo
+                document.querySelector('.form-check').classList.remove('d-none');
+            } else if (data.tipo === 'MENSUAL') {
+                infoMensual.classList.remove('d-none');
+                document.getElementById('vencimientoMensual').textContent = data.vencimiento;
+                // Ocultar opción de factura para mensualidad
+                document.querySelector('.form-check').classList.add('d-none');
+                document.getElementById('requiereFactura').checked = false;
+                document.getElementById('datosFactura').classList.add('d-none');
+            } else if (data.tipo === 'EXENTO') {
+                infoExento.classList.remove('d-none');
+                document.getElementById('vencimientoExento').textContent = data.vencimiento;
+                // Ocultar opción de factura para exentos
+                document.querySelector('.form-check').classList.add('d-none');
+                document.getElementById('requiereFactura').checked = false;
+                document.getElementById('datosFactura').classList.add('d-none');
+            }
+
+            // Mostrar el contenedor principal
+            infoVehiculo.classList.remove('d-none');
+        } catch (error) {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: error.message || 'Error al verificar el vehículo. Por favor, intente nuevamente.'
+            });
+            infoVehiculo.classList.add('d-none');
+        }
+    });
+
+    inputPlaca.addEventListener('input', function() {
+        this.value = this.value.toUpperCase();
+        this.classList.remove('is-invalid');
+        infoVehiculo.classList.add('d-none');
+    });
+
+    formSalida.addEventListener('submit', function(e) {
+        e.preventDefault();
+        btnVerificar.click();
+    });
+
+    // Manejar checkbox de factura electrónica
+    const checkboxFactura = document.getElementById('requiereFactura');
+    const datosFactura = document.getElementById('datosFactura');
+    const formProcesarSalida = document.getElementById('formProcesarSalida');
+
+    checkboxFactura.addEventListener('change', function() {
+        datosFactura.classList.toggle('d-none', !this.checked);
+        const inputs = datosFactura.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.required = this.checked;
+        });
+    });
+
+    formProcesarSalida.addEventListener('submit', function(e) {
+        if (checkboxFactura.checked) {
+            const inputs = datosFactura.querySelectorAll('input');
+            let valid = true;
+            inputs.forEach(input => {
+                if (!input.value.trim()) {
+                    valid = false;
+                    input.classList.add('is-invalid');
+                } else {
+                    input.classList.remove('is-invalid');
+                }
+            });
+            if (!valid) {
+                e.preventDefault();
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Por favor complete todos los campos para la factura electrónica'
+                });
+            }
+        }
+    });
+
+    // Agregar evento para los botones de verificar en la tabla
+    document.querySelectorAll('.btn-verificar-placa').forEach(button => {
+        button.addEventListener('click', function() {
+            const placa = this.getAttribute('data-placa');
+            inputPlaca.value = placa;
+            btnVerificar.click();
+            // Scroll hacia arriba para ver la información
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+});</script> 

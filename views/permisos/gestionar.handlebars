@@ -1,0 +1,78 @@
+{{#if error}}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    {{error}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{{/if}}
+
+<div class="card">
+    <div class="card-header">
+        <h3>Gestión de Permisos por Rol</h3>
+    </div>
+    <div class="card-body">
+        <form method="GET" action="/permisos/gestionar" class="mb-4">
+            <div class="row">
+                <div class="col-md-6">
+                    <label for="rol_id" class="form-label">Seleccionar Rol</label>
+                    <select name="rol_id" id="rol_id" class="form-select" onchange="this.form.submit()">
+                        <option value="">Seleccione un rol...</option>
+                        {{#each roles}}
+                        <option value="{{this.id}}" {{#if (eq this.id ../rolSeleccionado)}}selected{{/if}}>
+                            {{this.nombre}}
+                        </option>
+                        {{/each}}
+                    </select>
+                </div>
+            </div>
+        </form>
+
+        {{#if rolSeleccionado}}
+        <form action="/permisos/actualizar" method="POST">
+            <input type="hidden" name="rol_id" value="{{rolSeleccionado}}">
+            
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Módulo</th>
+                            {{#each acciones}}
+                            <th class="text-center">{{this.nombre}}</th>
+                            {{/each}}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each modulos}}
+                        <tr>
+                            <td>
+                                <i class="{{this.icono}}"></i> {{this.nombre}}
+                            </td>
+                            {{#each ../acciones}}
+                            <td class="text-center">
+                                <div class="form-check d-flex justify-content-center">
+                                    <input class="form-check-input" 
+                                           type="checkbox" 
+                                           name="permisos" 
+                                           value="{{../id}}-{{this.id}}"
+                                           {{#if (tienePermisoActivo ../../permisosActuales ../id this.id)}}checked{{/if}}>
+                                </div>
+                            </td>
+                            {{/each}}
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="d-flex justify-content-end mt-3">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-save me-2"></i>Guardar Permisos
+                </button>
+            </div>
+        </form>
+        {{else}}
+        <div class="alert alert-info">
+            Seleccione un rol para gestionar sus permisos.
+        </div>
+        {{/if}}
+    </div>
+</div> 

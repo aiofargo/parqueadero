@@ -1,0 +1,94 @@
+<div class="card">
+    <div class="card-header">
+        <div class="d-flex justify-content-between align-items-center">
+            <h2 class="mb-0">Detalles de la Mensualidad</h2>
+            <div>
+                <a href="/mensualidades/renovar/{{mensualidad.id}}" class="btn btn-success {{#if (eq mensualidad.estado 0)}}disabled{{/if}}">
+                    <i class="bi bi-arrow-clockwise me-1"></i>
+                    Renovar
+                </a>
+                <a href="/mensualidades" class="btn btn-secondary ms-2">Volver</a>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Placa</label>
+                <input type="text" class="form-control" value="{{mensualidad.placa}}" readonly>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Nombre del Dueño</label>
+                <input type="text" class="form-control" value="{{mensualidad.nombre_dueno}}" readonly>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Celular</label>
+                <input type="text" class="form-control" value="{{mensualidad.celular}}" readonly>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Email</label>
+                <input type="text" class="form-control" value="{{mensualidad.email}}" readonly>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Tipo de Vehículo</label>
+                <input type="text" class="form-control" value="{{mensualidad.tipo_vehiculo}}" readonly>
+            </div>
+            <div class="col-md-4 mb-3">
+                <label class="form-label">Estado</label>
+                <input type="text" class="form-control" value="{{#if (eq mensualidad.estado 1)}}Activo{{else}}Inactivo{{/if}}" readonly>
+            </div>
+        </div>
+
+        <hr class="my-4">
+
+        <h3 class="mb-4">Historial de Pagos</h3>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Fecha de Pago</th>
+                        <th>Período de Vigencia</th>
+                        <th>Meses</th>
+                        <th>Valor Total</th>
+                        <th>IVA</th>
+                        <th>Método de Pago</th>
+                        <th>Referencia</th>
+                        <th>Usuario</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each historialPagos}}
+                    <tr>
+                        <td>{{fecha_pago}}</td>
+                        <td>{{vigente_desde}} - {{vigente_hasta}}</td>
+                        <td class="text-center">{{cantidad_meses}}</td>
+                        <td>{{valor_total}}</td>
+                        <td>{{valor_iva}}</td>
+                        <td>{{metodo_pago}}</td>
+                        <td>{{referencia_pago}}</td>
+                        <td>{{usuario_registro}}</td>
+                        <td>
+                            <span class="badge {{#if (eq estado_pago 1)}}bg-success{{else}}bg-danger{{/if}}">
+                                {{#if (eq estado_pago 1)}}Pagado{{else}}Anulado{{/if}}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="/mensualidades/ticket/{{pago_id}}" class="btn btn-sm btn-warning" title="Ver/Imprimir Ticket">
+                                <i class="bi bi-receipt"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div> 

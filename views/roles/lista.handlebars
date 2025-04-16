@@ -1,0 +1,42 @@
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Lista de Roles</h2>
+    <a href="/roles/crear" class="btn btn-primary">Nuevo Rol</a>
+</div>
+
+<form method="GET" action="/roles" class="mb-4">
+    <div class="row">
+        <div class="col-md-4">
+            <select name="estado" class="form-select" onchange="this.form.submit()">
+                <option value="">Todos</option>
+                <option value="1">Habilitados</option>
+                <option value="0">Inhabilitados</option>
+            </select>
+        </div>
+    </div>
+</form>
+
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{#each roles}}
+            <tr>
+                <td>{{this.nombre}}</td>
+                <td>{{this.descripcion}}</td>
+                <td>{{#if (eq this.estado 1)}}Habilitado{{else}}Inhabilitado{{/if}}</td>
+                <td>
+                    <a href="/roles/editar/{{this.id}}" class="btn btn-sm btn-warning">Editar</a>
+                    <a href="/roles/ver/{{this.id}}" class="btn btn-sm btn-info">Ver</a>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+</div> 
