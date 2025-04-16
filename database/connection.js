@@ -4,7 +4,7 @@ const mysql = require('mysql2/promise');
 const dbConfig = {
     host: 'localhost',
     user: 'root',
-    password: '',
+    password: '@ioF4rg0#D3v',
     database: 'parqueadero',
     waitForConnections: true,
     connectionLimit: 10,
